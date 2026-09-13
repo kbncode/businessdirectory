@@ -1,0 +1,10 @@
+[
+  {
+    "key": "Registration Success!",
+    "text": "You have registered your business, thank you, we shortly publish the directory and let you know"
+  },
+  {
+    "key": "Registration Faiure!",
+    "text": "Registration is failed please try again!"
+  }
+]

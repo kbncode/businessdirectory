@@ -1,0 +1,285 @@
+// KBN Business Directory — Prisma schema (draft for Step 2)
+// Provider: Vercel Postgres
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------- Accounts ----------
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  passwordHash  String
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  businesses    Business[] @relation("SubmittedBy")
+  accounts      Account[]
+  sessions      Session[]
+  resetTokens   PasswordResetToken[]
+
+  @@map("users")
+}
+
+// ---------- Auth (NextAuth.js / Auth.js v5 — viewer/owner flow) ----------
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model Admin {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime    @default(now())
+  heroImages   HeroImage[]
+
+  @@map("admins")
+}
+
+model HeroImage {
+  id             String   @id @default(cuid())
+  imageUrl       String
+  altText        String
+  sortOrder      Int      @default(0)
+  isActive       Boolean  @default(true)
+  originalSizeKb Int?
+  width          Int?
+  height         Int?
+  uploadedById   String
+  uploadedBy     Admin    @relation(fields: [uploadedById], references: [id])
+  createdAt      DateTime @default(now())
+
+  @@index([isActive, sortOrder])
+  @@map("hero_images")
+}
+
+// ---------- Master data ----------
+
+model Country {
+  id     String  @id
+  name   String  @unique
+  states State[]
+  businesses Business[]
+
+  @@map("countries")
+}
+
+model State {
+  id        String   @id
+  name      String
+  countryId String
+  country   Country  @relation(fields: [countryId], references: [id])
+  cities    City[]
+  businesses Business[]
+
+  @@index([countryId])
+  @@map("states")
+}
+
+model City {
+  id      String @id
+  name    String
+  stateId String
+  state   State  @relation(fields: [stateId], references: [id])
+
+  @@index([stateId])
+  @@index([name])
+  @@map("cities")
+}
+
+model BusinessEntity {
+  id         String     @id
+  name       String     @unique
+  businesses Business[]
+
+  @@map("business_entities")
+}
+
+model BusinessType {
+  id         String     @id
+  name       String     @unique
+  businesses Business[]
+
+  @@map("business_types")
+}
+
+model BusinessMainCategory {
+  id          String              @id
+  name        String              @unique
+  subCategories BusinessSubCategory[]
+  businesses  Business[]
+
+  @@map("business_main_categories")
+}
+
+model BusinessSubCategory {
+  id              String                @id
+  name            String
+  mainCategoryId  String
+  mainCategory    BusinessMainCategory  @relation(fields: [mainCategoryId], references: [id])
+  businesses      BusinessSubCategoryMap[]
+
+  @@index([mainCategoryId])
+  @@map("business_sub_categories")
+}
+
+// ---------- Core listing ----------
+
+enum BusinessStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Business {
+  id                String         @id @default(cuid())
+
+  submittedById     String
+  submittedBy       User           @relation("SubmittedBy", fields: [submittedById], references: [id])
+
+  ownerName         String
+  businessName      String
+  establishedYear   Int?
+  businessPhone     String
+  personalPhone     String?
+  email             String?
+  website           String?
+
+  entityId          String
+  entity            BusinessEntity @relation(fields: [entityId], references: [id])
+
+  typeId            String
+  type              BusinessType   @relation(fields: [typeId], references: [id])
+
+  mainCategoryId    String
+  mainCategory      BusinessMainCategory @relation(fields: [mainCategoryId], references: [id])
+  subCategories     BusinessSubCategoryMap[]
+
+  countryId         String
+  country           Country        @relation(fields: [countryId], references: [id])
+  stateId           String?
+  state             State?         @relation(fields: [stateId], references: [id])
+  city              String
+  area              String?
+  nativePlace       String?
+  address           String?
+
+  about             String?
+  productsServices  String?
+  experience        String?
+  socialLinks       String?
+
+  photoUrl          String?
+  brochureUrl       String?
+  additionalNote    String?
+
+  status            BusinessStatus @default(PENDING)
+  rejectionReason   String?
+
+  // Home page "Featured listings" — admin-controlled, auto-expires. A row
+  // only actually shows once status: APPROVED AND isFeatured AND the
+  // current time falls within [featuredStartDate, featuredEndDate] (either
+  // bound may be null/open-ended) — see getFeaturedBusinesses. No cron job
+  // needed to "remove" an expired feature; the query filter handles it.
+  isFeatured        Boolean        @default(false)
+  featuredStartDate DateTime?
+  featuredEndDate   DateTime?
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  approvedAt        DateTime?
+
+  // Generated tsvector column (businessName/about/productsServices), kept in
+  // sync by Postgres itself — see the add_search_and_indexes migration for
+  // the GENERATED ALWAYS AS ... STORED definition and its GIN index. Prisma
+  // can't express a generated column, so it's read-only from the client and
+  // only ever queried via $queryRaw in lib/queries/business.ts.
+  searchVector      Unsupported("tsvector")?
+
+  @@index([countryId, stateId, city, status])
+  @@index([mainCategoryId, status])
+  @@index([submittedById])
+  @@index([status, createdAt])
+  @@index([isFeatured, status])
+  @@map("businesses")
+}
+
+model BusinessSubCategoryMap {
+  businessId    String
+  business      Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  subCategoryId String
+  subCategory   BusinessSubCategory  @relation(fields: [subCategoryId], references: [id])
+
+  @@id([businessId, subCategoryId])
+  @@index([subCategoryId])
+  @@map("business_sub_category_map")
+}
+
+// ---------- Static content ----------
+
+model AppMessage {
+  key  String @id
+  text String
+
+  @@map("app_messages")
+}

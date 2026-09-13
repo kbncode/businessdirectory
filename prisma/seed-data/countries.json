@@ -1,0 +1,74 @@
+[
+  {
+    "id": "C1",
+    "name": "India"
+  },
+  {
+    "id": "C2",
+    "name": "United States"
+  },
+  {
+    "id": "C3",
+    "name": "United Kingdom"
+  },
+  {
+    "id": "C4",
+    "name": "UAE/Dubai"
+  },
+  {
+    "id": "C5",
+    "name": "Bahrain"
+  },
+  {
+    "id": "C6",
+    "name": "Qatar"
+  },
+  {
+    "id": "C7",
+    "name": "Saudi Arabia"
+  },
+  {
+    "id": "C8",
+    "name": "Australia"
+  },
+  {
+    "id": "C9",
+    "name": "New Zealand"
+  },
+  {
+    "id": "C10",
+    "name": "Singapore"
+  },
+  {
+    "id": "C11",
+    "name": "China"
+  },
+  {
+    "id": "C12",
+    "name": "Canada"
+  },
+  {
+    "id": "C13",
+    "name": "France"
+  },
+  {
+    "id": "C14",
+    "name": "Germany"
+  },
+  {
+    "id": "C15",
+    "name": "Other Europe"
+  },
+  {
+    "id": "C16",
+    "name": "Africa"
+  },
+  {
+    "id": "C17",
+    "name": "North America"
+  },
+  {
+    "id": "C18",
+    "name": "Other country"
+  }
+]

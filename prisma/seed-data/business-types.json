@@ -1,0 +1,30 @@
+[
+  {
+    "id": "T1",
+    "name": "Manufacturing/Production"
+  },
+  {
+    "id": "T2",
+    "name": "Service"
+  },
+  {
+    "id": "T3",
+    "name": "Construction/Infa dev"
+  },
+  {
+    "id": "T4",
+    "name": "Tech Development"
+  },
+  {
+    "id": "T5",
+    "name": "Wholesale / Distrubution"
+  },
+  {
+    "id": "T6",
+    "name": "Trading"
+  },
+  {
+    "id": "T7",
+    "name": "Consulting"
+  }
+]

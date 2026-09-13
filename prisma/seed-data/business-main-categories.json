@@ -1,0 +1,82 @@
+[
+  {
+    "id": "MC1",
+    "name": "Agriculture & Allied Industries"
+  },
+  {
+    "id": "MC2",
+    "name": "Manufacturing"
+  },
+  {
+    "id": "MC3",
+    "name": "Information Technology & Software Services"
+  },
+  {
+    "id": "MC4",
+    "name": "Healthcare & Medical Services"
+  },
+  {
+    "id": "MC5",
+    "name": "Education & Training"
+  },
+  {
+    "id": "MC6",
+    "name": "Financial Services"
+  },
+  {
+    "id": "MC7",
+    "name": "Retail Trade"
+  },
+  {
+    "id": "MC8",
+    "name": "Construction & Real Estate"
+  },
+  {
+    "id": "MC9",
+    "name": "Transportation & Logistics"
+  },
+  {
+    "id": "MC10",
+    "name": "Hospitality & Tourism"
+  },
+  {
+    "id": "MC11",
+    "name": "Professional Services"
+  },
+  {
+    "id": "MC12",
+    "name": "Personal Services"
+  },
+  {
+    "id": "MC13",
+    "name": "Media & Entertainment"
+  },
+  {
+    "id": "MC14",
+    "name": "Energy & Power"
+  },
+  {
+    "id": "MC15",
+    "name": "Telecommunications"
+  },
+  {
+    "id": "MC16",
+    "name": "Environmental Services"
+  },
+  {
+    "id": "MC17",
+    "name": "Import & Export"
+  },
+  {
+    "id": "MC18",
+    "name": "Non-Profit & Social Services"
+  },
+  {
+    "id": "MC19",
+    "name": "Government & Public Services"
+  },
+  {
+    "id": "MC20",
+    "name": "Sports & Recreation"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "name": "Private Ltd"
+  },
+  {
+    "id": "E2",
+    "name": "Public Ltd"
+  },
+  {
+    "id": "E3",
+    "name": "Sole Ownership"
+  },
+  {
+    "id": "E4",
+    "name": "Partnership"
+  },
+  {
+    "id": "E5",
+    "name": "LLC/LLP"
+  }
+]

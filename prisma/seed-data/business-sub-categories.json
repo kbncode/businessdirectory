@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "BC001",
+    "name": "Horticulture & Floriculture",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC002",
+    "name": "Animal Husbandry & Livestock",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC003",
+    "name": "Poultry Farming",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC004",
+    "name": "Dairy Farming",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC005",
+    "name": "Fishery & Aquaculture",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC006",
+    "name": "Agricultural Equipment & Machinery",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC007",
+    "name": "Seeds & Fertilizers",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC008",
+    "name": "Organic Farming",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC009",
+    "name": "Agricultural Consultancy",
+    "mainCategoryId": "MC1"
+  },
+  {
+    "id": "BC010",
+    "name": "Food Processing & Beverages",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC011",
+    "name": "Textiles & Apparel",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC012",
+    "name": "Automobile & Auto Parts",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC013",
+    "name": "Chemicals & Pharmaceuticals",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC014",
+    "name": "Electronics & Electrical Equipment",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC015",
+    "name": "Machinery & Equipment",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC016",
+    "name": "Leather & Leather Products",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC017",
+    "name": "Paper & Paper Products",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC018",
+    "name": "Plastic & Rubber Products",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC019",
+    "name": "Metal & Metal Products",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC020",
+    "name": "Furniture Manufacturing",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC021",
+    "name": "Cosmetics & Personal Care Products",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC022",
+    "name": "Toys & Games Manufacturing",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC023",
+    "name": "Medical Equipment & Supplies",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC024",
+    "name": "Renewable Energy Products",
+    "mainCategoryId": "MC2"
+  },
+  {
+    "id": "BC025",
+    "name": "Software Development",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC026",
+    "name": "Web Development & Design",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC027",
+    "name": "Mobile App Development",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC028",
+    "name": "IT Consulting & Support",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC029",
+    "name": "Data Analytics & AI Services",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC030",
+    "name": "Cybersecurity Services",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC031",
+    "name": "Cloud Computing Services",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC032",
+    "name": "Digital Marketing",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC033",
+    "name": "E-commerce Solutions",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC034",
+    "name": "System Integration",
+    "mainCategoryId": "MC3"
+  },
+  {
+    "id": "BC035",
+    "name": "Hospitals & Clinics",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC036",
+    "name": "Diagnostic Centers",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC037",
+    "name": "Pharmacy & Medical Stores",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC038",
+    "name": "Dental Care",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC039",
+    "name": "Physiotherapy & Rehabilitation",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC040",
+    "name": "Ayurvedic & Herbal Medicine",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC041",
+    "name": "Mental Health Services",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC042",
+    "name": "Home Healthcare",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC043",
+    "name": "Medical Equipment Sales",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC044",
+    "name": "Telemedicine",
+    "mainCategoryId": "MC4"
+  },
+  {
+    "id": "BC045",
+    "name": "Schools & Colleges",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC046",
+    "name": "Coaching Institutes",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC047",
+    "name": "Skill Development Training",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC048",
+    "name": "Professional Training",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC049",
+    "name": "Online Education Platforms",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC050",
+    "name": "Language Training",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC051",
+    "name": "Technical Training",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC052",
+    "name": "Management Training",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC053",
+    "name": "Educational Consultancy",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC054",
+    "name": "Study Abroad Services",
+    "mainCategoryId": "MC5"
+  },
+  {
+    "id": "BC055",
+    "name": "Banking Services",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC056",
+    "name": "Insurance Services",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC057",
+    "name": "Investment & Wealth Management",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC058",
+    "name": "Mutual Funds",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC059",
+    "name": "Stock Broking",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC060",
+    "name": "Loan & Credit Services",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC061",
+    "name": "Financial Advisory",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC062",
+    "name": "Tax Consulting",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC063",
+    "name": "Accounting Services",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC064",
+    "name": "Payment Solutions",
+    "mainCategoryId": "MC6"
+  },
+  {
+    "id": "BC065",
+    "name": "Clothing & Fashion",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC066",
+    "name": "Electronics & Mobile",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC067",
+    "name": "Grocery & Supermarkets",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC068",
+    "name": "Jewelry & Accessories",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC069",
+    "name": "Home & Garden",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC070",
+    "name": "Sports & Fitness",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC071",
+    "name": "Books & Stationery",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC072",
+    "name": "Beauty & Personal Care",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC073",
+    "name": "Automotive Retail",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC074",
+    "name": "Online Retail",
+    "mainCategoryId": "MC7"
+  },
+  {
+    "id": "BC075",
+    "name": "Construction Companies",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC076",
+    "name": "Real Estate Development",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC077",
+    "name": "Interior Design",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC078",
+    "name": "Architecture Services",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC079",
+    "name": "Building Materials",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC080",
+    "name": "Property Management",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC081",
+    "name": "Civil Engineering",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC082",
+    "name": "Electrical Contractors",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC083",
+    "name": "Plumbing Services",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC084",
+    "name": "Painting & Decoration",
+    "mainCategoryId": "MC8"
+  },
+  {
+    "id": "BC085",
+    "name": "Logistics & Courier Services",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC086",
+    "name": "Truck Transportation",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC087",
+    "name": "Taxi & Cab Services",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC088",
+    "name": "Bus Transportation",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC089",
+    "name": "Air Transportation",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC090",
+    "name": "Railway Transportation",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC091",
+    "name": "Warehousing Services",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC092",
+    "name": "Freight Forwarding",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC093",
+    "name": "Supply Chain Management",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC094",
+    "name": "Vehicle Rental",
+    "mainCategoryId": "MC9"
+  },
+  {
+    "id": "BC095",
+    "name": "Hotels & Resorts",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC096",
+    "name": "Restaurants & Cafes",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC097",
+    "name": "Travel Agencies",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC098",
+    "name": "Tour Operators",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC099",
+    "name": "Event Management",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC100",
+    "name": "Wedding Planning",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC101",
+    "name": "Catering Services",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC102",
+    "name": "Adventure Tourism",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC103",
+    "name": "Homestays & B&B",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC104",
+    "name": "Entertainment Venues",
+    "mainCategoryId": "MC10"
+  },
+  {
+    "id": "BC105",
+    "name": "Legal Services",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC106",
+    "name": "Management Consulting",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC107",
+    "name": "HR Consulting",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC108",
+    "name": "Marketing & Advertising",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC109",
+    "name": "Public Relations",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC110",
+    "name": "Research & Development",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC111",
+    "name": "Quality Assurance",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC112",
+    "name": "Environmental Consulting",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC113",
+    "name": "Business Process Outsourcing",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC114",
+    "name": "Technical Writing",
+    "mainCategoryId": "MC11"
+  },
+  {
+    "id": "BC115",
+    "name": "Beauty Salons & Spas",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC116",
+    "name": "Fitness Centers & Gyms",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC117",
+    "name": "Laundry & Dry Cleaning",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC118",
+    "name": "Photography Services",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC119",
+    "name": "Courier & Postal Services",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC120",
+    "name": "Security Services",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC121",
+    "name": "Cleaning Services",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC122",
+    "name": "Repair & Maintenance",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC123",
+    "name": "Pet Services",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC124",
+    "name": "Personal Care Services",
+    "mainCategoryId": "MC12"
+  },
+  {
+    "id": "BC125",
+    "name": "Print Media",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC126",
+    "name": "Broadcasting & TV",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC127",
+    "name": "Film Production",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC128",
+    "name": "Music & Audio",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC129",
+    "name": "Gaming & Animation",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC130",
+    "name": "Content Creation",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC131",
+    "name": "Publishing",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC132",
+    "name": "Advertising Agencies",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC133",
+    "name": "Event Entertainment",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC134",
+    "name": "Digital Media",
+    "mainCategoryId": "MC13"
+  },
+  {
+    "id": "BC135",
+    "name": "Electricity Generation",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC136",
+    "name": "Solar Energy",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC137",
+    "name": "Wind Energy",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC138",
+    "name": "Oil & Gas",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC139",
+    "name": "Coal Mining",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC140",
+    "name": "Energy Equipment",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC141",
+    "name": "Power Distribution",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC142",
+    "name": "Energy Consulting",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC143",
+    "name": "Battery Manufacturing",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC144",
+    "name": "Energy Storage",
+    "mainCategoryId": "MC14"
+  },
+  {
+    "id": "BC145",
+    "name": "Mobile Services",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC146",
+    "name": "Internet Service Providers",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC147",
+    "name": "Telecom Equipment",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC148",
+    "name": "Fiber Optic Services",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC149",
+    "name": "Satellite Communication",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC150",
+    "name": "Network Services",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC151",
+    "name": "VoIP Services",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC152",
+    "name": "Telecom Consulting",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC153",
+    "name": "Communication Software",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC154",
+    "name": "Telecom Infrastructure",
+    "mainCategoryId": "MC15"
+  },
+  {
+    "id": "BC155",
+    "name": "Waste Management",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC156",
+    "name": "Water Treatment",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC157",
+    "name": "Recycling Services",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC158",
+    "name": "Environmental Consulting",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC159",
+    "name": "Pollution Control",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC160",
+    "name": "Green Technology",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC161",
+    "name": "Renewable Energy Consulting",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC162",
+    "name": "Environmental Testing",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC163",
+    "name": "Sustainable Solutions",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC164",
+    "name": "Climate Change Services",
+    "mainCategoryId": "MC16"
+  },
+  {
+    "id": "BC165",
+    "name": "Import Services",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC166",
+    "name": "Export Services",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC167",
+    "name": "Customs Clearance",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC168",
+    "name": "International Trade",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC169",
+    "name": "Freight Services",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC170",
+    "name": "Trade Consulting",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC171",
+    "name": "Export Finance",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC172",
+    "name": "International Marketing",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC173",
+    "name": "Trade Documentation",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC174",
+    "name": "Global Sourcing",
+    "mainCategoryId": "MC17"
+  },
+  {
+    "id": "BC175",
+    "name": "NGOs & Charities",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC176",
+    "name": "Social Work Organizations",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC177",
+    "name": "Educational Non-Profits",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC178",
+    "name": "Healthcare Non-Profits",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC179",
+    "name": "Environmental Organizations",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC180",
+    "name": "Community Services",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC181",
+    "name": "Religious Organizations",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC182",
+    "name": "Cultural Organizations",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC183",
+    "name": "Advocacy Groups",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC184",
+    "name": "Development Organizations",
+    "mainCategoryId": "MC18"
+  },
+  {
+    "id": "BC185",
+    "name": "Central Government",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC186",
+    "name": "State Government",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC187",
+    "name": "Local Government",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC188",
+    "name": "Public Administration",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC189",
+    "name": "Defense Services",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC190",
+    "name": "Law Enforcement",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC191",
+    "name": "Public Utilities",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC192",
+    "name": "Regulatory Bodies",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC193",
+    "name": "Public Healthcare",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC194",
+    "name": "Public Education",
+    "mainCategoryId": "MC19"
+  },
+  {
+    "id": "BC195",
+    "name": "Sports Clubs & Facilities",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC196",
+    "name": "Fitness & Wellness",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC197",
+    "name": "Adventure Sports",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC198",
+    "name": "Sports Equipment",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC199",
+    "name": "Sports Training",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC200",
+    "name": "Sports Events",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC201",
+    "name": "Recreation Centers",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC202",
+    "name": "Outdoor Activities",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC203",
+    "name": "Sports Medicine",
+    "mainCategoryId": "MC20"
+  },
+  {
+    "id": "BC204",
+    "name": "Sports Marketing",
+    "mainCategoryId": "MC20"
+  }
+]
