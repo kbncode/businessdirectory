@@ -7,6 +7,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { slugify } from "../lib/slug";
 
 const prisma = new PrismaClient();
 
@@ -159,6 +160,7 @@ async function main() {
     const business = await prisma.business.create({
       data: {
         ...data,
+        slug: slugify(data.businessName),
         submittedById: owner.id,
         countryId: india.id,
         stateId: gujarat.id,

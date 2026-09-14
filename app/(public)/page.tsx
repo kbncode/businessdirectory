@@ -148,7 +148,7 @@ export default async function HomePage() {
               {featuredBusinesses.map((business) => (
                 <BusinessCard
                   key={business.id}
-                  href={`/business/${business.id}`}
+                  href={`/business/${business.slug}`}
                   name={business.businessName}
                   location={formatBusinessLocation(business)}
                   category={business.mainCategory.name}

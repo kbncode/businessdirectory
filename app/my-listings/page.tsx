@@ -62,7 +62,7 @@ export default async function MyListingsPage() {
                 <div className="flex shrink-0 flex-wrap items-center gap-2">
                   {listing.status === "APPROVED" && (
                     <Link
-                      href={`/business/${listing.id}`}
+                      href={`/business/${listing.slug}`}
                       className="rounded-sm border border-ink px-3 py-1.5 text-xs text-ink hover:bg-sand"
                     >
                       View

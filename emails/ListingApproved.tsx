@@ -3,11 +3,11 @@ import { APP_URL, LOGO_URL, body, container, logo, heading, text, mutedText, but
 
 export interface ListingApprovedProps {
   businessName: string;
-  businessId: string;
+  businessSlug: string;
 }
 
-export default function ListingApproved({ businessName, businessId }: ListingApprovedProps) {
-  const listingUrl = `${APP_URL}/business/${businessId}`;
+export default function ListingApproved({ businessName, businessSlug }: ListingApprovedProps) {
+  const listingUrl = `${APP_URL}/business/${businessSlug}`;
 
   return (
     <Html>

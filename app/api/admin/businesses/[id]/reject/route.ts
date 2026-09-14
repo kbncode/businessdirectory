@@ -34,7 +34,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       );
     }
 
-    revalidatePath(`/business/${business.id}`);
+    revalidatePath(`/business/${business.slug}`);
     return NextResponse.json({ business });
   } catch (error) {
     console.error(`Failed to reject business ${params.id}:`, error);

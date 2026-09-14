@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { buttonClasses } from "@/components/ui/Button";
 import { BusinessDetailTabs } from "@/components/business/BusinessDetailTabs";
 import { formatBusinessLocation, truncate } from "@/lib/format";
-import { getApprovedBusinessById } from "@/lib/queries/business";
+import { getApprovedBusinessBySlug } from "@/lib/queries/business";
 import { getViewerSession } from "@/lib/auth";
 
 // ISR: served from cache for up to 5 minutes between visits. Admin
@@ -16,11 +16,11 @@ import { getViewerSession } from "@/lib/auth";
 export const revalidate = 300;
 
 interface Props {
-  params: { id: string };
+  params: { slug: string };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const business = await getApprovedBusinessById(params.id);
+  const business = await getApprovedBusinessBySlug(params.slug);
   // generateMetadata runs before the page body streams, so the 404 must be
   // thrown here too — otherwise Next commits a 200 status before the page
   // component's own notFound() call ever registers.
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BusinessDetailPage({ params }: Props) {
-  const business = await getApprovedBusinessById(params.id);
+  const business = await getApprovedBusinessBySlug(params.slug);
   if (!business) notFound();
 
   const session = await getViewerSession();
@@ -124,7 +124,7 @@ export default async function BusinessDetailPage({ params }: Props) {
         <div className="mx-auto max-w-5xl px-4">
           <div className="rounded-sm border border-sand bg-paper px-5 sm:px-8">
             <BusinessDetailTabs
-              businessId={business.id}
+              businessSlug={business.slug}
               about={business.about}
               productsServices={business.productsServices}
               experience={business.experience}

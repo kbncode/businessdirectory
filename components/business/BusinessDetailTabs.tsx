@@ -24,7 +24,7 @@ export interface ContactInfo {
 }
 
 interface BusinessDetailTabsProps {
-  businessId: string;
+  businessSlug: string;
   about: string | null;
   productsServices: string | null;
   experience: string | null;
@@ -50,7 +50,7 @@ function ContactRow({ icon: Icon, label, children }: { icon: typeof Phone; label
 }
 
 export function BusinessDetailTabs({
-  businessId,
+  businessSlug,
   about,
   productsServices,
   experience,
@@ -187,7 +187,7 @@ export function BusinessDetailTabs({
               </span>
               <p className="text-sm font-medium text-ink">Log in to view contact details and brochure</p>
               <div className="mt-1 flex flex-wrap gap-2">
-                <Link href={`/login?callbackUrl=/business/${businessId}`} className={buttonClasses("primary")}>
+                <Link href={`/login?callbackUrl=/business/${businessSlug}`} className={buttonClasses("primary")}>
                   Log in
                 </Link>
                 <Link href="/signup" className={buttonClasses("ghost")}>

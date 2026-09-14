@@ -197,6 +197,11 @@ model Business {
   submittedById     String
   submittedBy       User           @relation("SubmittedBy", fields: [submittedById], references: [id])
 
+  // Generated once from businessName at creation time (see lib/slug.ts) and
+  // never auto-regenerated on edit — a listing's public URL has to stay
+  // stable even after the owner renames the business, or every shared
+  // link/bookmark/search-engine result for it breaks.
+  slug              String         @unique
   ownerName         String
   businessName      String
   establishedYear   Int?

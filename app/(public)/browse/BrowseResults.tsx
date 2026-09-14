@@ -47,7 +47,7 @@ export function BrowseResults({ initialItems, initialCursor, filterQuery }: Brow
         {items.map((item) => (
           <BusinessCard
             key={item.id}
-            href={`/business/${item.id}`}
+            href={`/business/${item.slug}`}
             name={item.businessName}
             location={locationFor(item)}
             category={item.mainCategoryName}

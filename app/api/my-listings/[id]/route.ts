@@ -31,6 +31,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   // Edits apply immediately regardless of status — an already-APPROVED
   // listing stays live without going back through admin review.
-  revalidatePath(`/business/${result.business.id}`);
+  revalidatePath(`/business/${result.business.slug}`);
   return NextResponse.json({ business: result.business });
 }

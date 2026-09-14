@@ -18,7 +18,7 @@ export async function POST(_request: Request, { params }: { params: { id: string
       await sendEmail(
         business.submittedBy.email,
         "Your listing is live on KBN Business Directory",
-        ListingApproved({ businessName: business.businessName, businessId: business.id })
+        ListingApproved({ businessName: business.businessName, businessSlug: business.slug })
       );
     } catch (emailError) {
       console.error(
@@ -27,7 +27,7 @@ export async function POST(_request: Request, { params }: { params: { id: string
       );
     }
 
-    revalidatePath(`/business/${business.id}`);
+    revalidatePath(`/business/${business.slug}`);
     return NextResponse.json({ business });
   } catch (error) {
     console.error(`Failed to approve business ${params.id}:`, error);

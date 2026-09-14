@@ -10,6 +10,7 @@ export async function getMyListings(ownerId: string) {
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
+      slug: true,
       businessName: true,
       photoUrl: true,
       city: true,

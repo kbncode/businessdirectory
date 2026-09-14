@@ -43,7 +43,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     return NextResponse.json({ error: result.error, fieldErrors: result.fieldErrors }, { status: result.status });
   }
 
-  revalidatePath(`/business/${result.business.id}`);
+  revalidatePath(`/business/${result.business.slug}`);
   return NextResponse.json({ business: result.business });
 }
 

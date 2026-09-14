@@ -20,6 +20,7 @@ const MAX_PAGE_SIZE = 20;
 
 export interface BrowseListItem {
   id: string;
+  slug: string;
   businessName: string;
   about: string | null;
   productsServices: string | null;
@@ -81,6 +82,7 @@ function buildSearchWhere(filters: BusinessFilters, cursor?: { createdAt: Date; 
 
 interface RawBrowseRow {
   id: string;
+  slug: string;
   businessName: string;
   about: string | null;
   productsServices: string | null;
@@ -106,7 +108,7 @@ export async function searchApprovedBusinessesCursor(
   // brochureUrl/contact fields. The full record is reserved for the
   // single business detail page.
   const rows = await prisma.$queryRaw<RawBrowseRow[]>`
-    SELECT b.id, b."businessName", b.about, b."productsServices", b.city, b.area, b."photoUrl", b."createdAt",
+    SELECT b.id, b.slug, b."businessName", b.about, b."productsServices", b.city, b.area, b."photoUrl", b."createdAt",
            mc.name AS "mainCategoryName", c.name AS "countryName", s.name AS "stateName"
     FROM "businesses" b
     JOIN "business_main_categories" mc ON mc.id = b."mainCategoryId"
@@ -124,6 +126,7 @@ export async function searchApprovedBusinessesCursor(
   return {
     items: page.map((row) => ({
       id: row.id,
+      slug: row.slug,
       businessName: row.businessName,
       about: row.about,
       productsServices: row.productsServices,
@@ -148,6 +151,7 @@ export async function countApprovedBusinesses(filters: BusinessFilters): Promise
 
 const BUSINESS_CARD_SELECT = {
   id: true,
+  slug: true,
   businessName: true,
   about: true,
   productsServices: true,
@@ -192,10 +196,12 @@ export async function countActiveFeaturedBusinesses(excludeId?: string) {
   return prisma.business.count({ where: activeFeaturedWhere(new Date(), excludeId) });
 }
 
-// Full record — only ever used on the single business detail page.
-export async function getApprovedBusinessById(id: string) {
+// Full record — only ever used on the single business detail page. Keyed by
+// slug since that's what the public URL uses; the slug is stable once
+// generated at creation, so this never needs to handle a "moved" listing.
+export async function getApprovedBusinessBySlug(slug: string) {
   return prisma.business.findFirst({
-    where: { id, status: "APPROVED" },
+    where: { slug, status: "APPROVED" },
     include: {
       mainCategory: true,
       entity: true,
@@ -254,7 +260,7 @@ export const getBusinessTypes = unstable_cache(
 export async function getApprovedBusinessesForSitemap() {
   return prisma.business.findMany({
     where: { status: "APPROVED" },
-    select: { id: true, updatedAt: true },
+    select: { slug: true, updatedAt: true },
     orderBy: { updatedAt: "desc" },
   });
 }

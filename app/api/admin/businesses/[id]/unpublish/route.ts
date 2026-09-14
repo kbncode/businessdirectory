@@ -11,7 +11,7 @@ export async function POST(_request: Request, { params }: { params: { id: string
 
   try {
     const business = await unpublishBusiness(params.id);
-    revalidatePath(`/business/${business.id}`);
+    revalidatePath(`/business/${business.slug}`);
     return NextResponse.json({ business });
   } catch (error) {
     console.error(`Failed to unpublish business ${params.id}:`, error);

@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const businessRoutes: MetadataRoute.Sitemap = businesses.map((business) => ({
-    url: `${APP_URL}/business/${business.id}`,
+    url: `${APP_URL}/business/${business.slug}`,
     lastModified: business.updatedAt,
     changeFrequency: "weekly",
     priority: 0.7,

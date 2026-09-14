@@ -13,6 +13,7 @@ import RegistrationReceived from "@/emails/RegistrationReceived";
 import AdminNewSubmission from "@/emails/AdminNewSubmission";
 import { rateLimit, rateLimitResponse, getClientIp } from "@/lib/rate-limit";
 import { verifyFileSignature } from "@/lib/file-signature";
+import { generateUniqueSlug } from "@/lib/slug";
 
 const ADMIN_ALERT_EMAIL = "kbn.gky@gmail.com";
 const HONEYPOT_FIELD = "website_url";
@@ -141,8 +142,10 @@ export async function POST(request: Request) {
   }
 
   try {
+    const slug = await generateUniqueSlug(values.businessName);
     const business = await prisma.business.create({
       data: {
+        slug,
         submittedById: session.user.id,
         ownerName: values.ownerName,
         businessName: values.businessName,
