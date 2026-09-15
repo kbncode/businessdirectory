@@ -5,10 +5,11 @@ import type { HeroImage } from "@prisma/client";
 import { GripVertical, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { buttonClasses } from "@/components/ui/Button";
+import { ImageCropModal } from "@/components/ui/ImageCropModal";
 import { AdminToast, type AdminToastValue } from "@/components/admin/AdminToast";
 import { cn } from "@/lib/utils";
 import { formatBytes } from "@/lib/format";
-import { ALLOWED_HERO_IMAGE_TYPES } from "@/lib/hero-image-constants";
+import { ALLOWED_HERO_IMAGE_TYPES, HERO_IMAGE_ASPECT_RATIO } from "@/lib/hero-image-constants";
 import { validateUploadFile } from "@/lib/file-validation";
 
 interface HeroImagesManagerProps {
@@ -28,29 +29,53 @@ export function HeroImagesManager({ initialImages }: HeroImagesManagerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [draggedId, setDraggedId] = useState<string | null>(null);
 
+  // A raw upload is never sent as-is — it always goes through the crop
+  // modal first, pinned to the same 1920x800 ratio the live carousel
+  // displays at, so what the admin approves is exactly what renders (no
+  // second, mismatched crop happening in the browser afterward).
+  const [originalSrc, setOriginalSrc] = useState<string | null>(null);
+  const [originalName, setOriginalName] = useState("image");
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [croppedFile, setCroppedFile] = useState<File | null>(null);
+  const [croppedPreview, setCroppedPreview] = useState<string | null>(null);
+
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     setFileError(null);
-    if (file) {
-      const error = validateFile(file);
-      if (error) {
-        setFileError(error);
-        event.target.value = "";
-      }
+    setCroppedFile(null);
+    setCroppedPreview(null);
+    if (!file) return;
+
+    const error = validateFile(file);
+    if (error) {
+      setFileError(error);
+      event.target.value = "";
+      return;
+    }
+
+    setOriginalName(file.name);
+    setOriginalSrc(URL.createObjectURL(file));
+    setCropModalOpen(true);
+  }
+
+  function handleCropped(file: File, previewUrl: string) {
+    setCroppedFile(file);
+    setCroppedPreview(previewUrl);
+    setCropModalOpen(false);
+  }
+
+  function handleCropCancel() {
+    setCropModalOpen(false);
+    if (!croppedFile && fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const file = fileInputRef.current?.files?.[0];
 
-    if (!file) {
+    if (!croppedFile) {
       setFileError("Choose an image to upload.");
-      return;
-    }
-    const validationError = validateFile(file);
-    if (validationError) {
-      setFileError(validationError);
       return;
     }
     if (!altText.trim()) {
@@ -62,7 +87,7 @@ export function HeroImagesManager({ initialImages }: HeroImagesManagerProps) {
     setFileError(null);
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", croppedFile);
     formData.append("altText", altText.trim());
 
     try {
@@ -80,6 +105,9 @@ export function HeroImagesManager({ initialImages }: HeroImagesManagerProps) {
         tone: "success",
       });
       setAltText("");
+      setCroppedFile(null);
+      setCroppedPreview(null);
+      setOriginalSrc(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch {
       setToast({ message: "Upload failed. Please try again.", tone: "error" });
@@ -164,6 +192,24 @@ export function HeroImagesManager({ initialImages }: HeroImagesManagerProps) {
           />
         </div>
 
+        {croppedPreview && (
+          <div className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */}
+            <img
+              src={croppedPreview}
+              alt="Cropped preview"
+              className="aspect-[12/5] w-48 rounded-sm border border-sand object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => setCropModalOpen(true)}
+              className="text-xs font-medium text-ink underline"
+            >
+              Recrop
+            </button>
+          </div>
+        )}
+
         <div>
           <label className="block text-sm font-medium text-ink" htmlFor="hero-alt">
             Alt text
@@ -183,12 +229,23 @@ export function HeroImagesManager({ initialImages }: HeroImagesManagerProps) {
 
         <button
           type="submit"
-          disabled={uploading}
+          disabled={uploading || !croppedFile}
           className={cn(buttonClasses("primary"), "self-start disabled:opacity-60")}
         >
           {uploading ? "Uploading..." : "Upload image"}
         </button>
       </form>
+
+      {cropModalOpen && originalSrc && (
+        <ImageCropModal
+          imageSrc={originalSrc}
+          fileName={originalName}
+          aspectRatio={HERO_IMAGE_ASPECT_RATIO}
+          outputWidth={1920}
+          onCancel={handleCropCancel}
+          onCropped={handleCropped}
+        />
+      )}
 
       <div>
         <h2 className="font-display text-sm font-bold uppercase tracking-widest text-stone">

@@ -10,10 +10,10 @@ export default async function AdminHeroImagesPage() {
       <p className="mt-1 text-sm text-stone">Manage the rotating hero images shown on the home page.</p>
 
       <div className="mt-6 rounded-sm border border-signalOrange/40 bg-signalOrange/10 p-4 text-sm text-ink">
-        <p className="font-medium">Recommended: 1920&times;800px or wider, 16:7 landscape ratio.</p>
+        <p className="font-medium">Formats: JPG, PNG, or WebP. Max file size: 5MB.</p>
         <p className="mt-1 text-stone">
-          Formats: JPG, PNG, or WebP. Max file size: 5MB. Your image will be automatically compressed and optimized
-          after upload.
+          After choosing a file, crop it to the 1920&times;800 banner shape — this is exactly how it displays live,
+          so what you crop is what visitors see. Compressed and optimized automatically after upload.
         </p>
       </div>
 

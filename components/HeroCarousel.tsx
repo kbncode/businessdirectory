@@ -54,7 +54,11 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
     >
       <div
         ref={trackRef}
-        className="no-scrollbar flex h-64 snap-x snap-mandatory overflow-x-auto scroll-smooth sm:h-80 md:h-96"
+        // Pinned to 1920x800 (12:5) — the same ratio the admin crop modal
+        // exports at — so a crop the admin approves renders exactly as
+        // approved instead of being cropped a second time by a mismatched
+        // fixed-height container at different viewport widths.
+        className="no-scrollbar flex aspect-[12/5] snap-x snap-mandatory overflow-x-auto scroll-smooth"
       >
         {images.map((image) => (
           <div key={image.id} className="h-full w-full shrink-0 snap-start">

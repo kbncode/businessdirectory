@@ -4,18 +4,36 @@ import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointer
 import { buttonClasses } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-const VIEWPORT_SIZE = 300; // on-screen crop window, square
-const OUTPUT_SIZE = 800; // exported image is always this many px square
+// The on-screen crop window is sized from this fixed width, with height
+// derived from the requested aspect ratio — a landscape hero crop and a
+// square photo crop each get a viewport shaped like their actual target,
+// not a fixed square shoehorned around every use.
+const VIEWPORT_WIDTH = 360;
 const MAX_ZOOM = 3;
 
 interface ImageCropModalProps {
   imageSrc: string;
   fileName: string;
+  /** width / height of both the crop window and the exported image. Defaults to 1 (square). */
+  aspectRatio?: number;
+  /** Exported image width in px; height is derived from aspectRatio. Defaults to 1200. */
+  outputWidth?: number;
   onCancel: () => void;
   onCropped: (file: File, previewUrl: string) => void;
 }
 
-export function ImageCropModal({ imageSrc, fileName, onCancel, onCropped }: ImageCropModalProps) {
+export function ImageCropModal({
+  imageSrc,
+  fileName,
+  aspectRatio = 1,
+  outputWidth = 1200,
+  onCancel,
+  onCropped,
+}: ImageCropModalProps) {
+  const viewportWidth = VIEWPORT_WIDTH;
+  const viewportHeight = Math.round(VIEWPORT_WIDTH / aspectRatio);
+  const outputHeight = Math.round(outputWidth / aspectRatio);
+
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [naturalSize, setNaturalSize] = useState<{ width: number; height: number } | null>(null);
   const [zoom, setZoom] = useState(1);
@@ -23,11 +41,11 @@ export function ImageCropModal({ imageSrc, fileName, onCancel, onCropped }: Imag
   const dragState = useRef<{ startX: number; startY: number; posX: number; posY: number } | null>(null);
 
   // baseScale is the "zoom 1" scale — the smallest scale that still fully
-  // covers the square viewport, so the user can never leave gaps at the edge.
+  // covers the crop viewport, so the user can never leave gaps at the edge.
   const baseScale = useMemo(() => {
     if (!naturalSize) return 1;
-    return Math.max(VIEWPORT_SIZE / naturalSize.width, VIEWPORT_SIZE / naturalSize.height);
-  }, [naturalSize]);
+    return Math.max(viewportWidth / naturalSize.width, viewportHeight / naturalSize.height);
+  }, [naturalSize, viewportWidth, viewportHeight]);
 
   const scale = baseScale * zoom;
 
@@ -35,8 +53,8 @@ export function ImageCropModal({ imageSrc, fileName, onCancel, onCropped }: Imag
     if (!naturalSize) return next;
     const scaledWidth = naturalSize.width * currentScale;
     const scaledHeight = naturalSize.height * currentScale;
-    const minX = Math.min(0, VIEWPORT_SIZE - scaledWidth);
-    const minY = Math.min(0, VIEWPORT_SIZE - scaledHeight);
+    const minX = Math.min(0, viewportWidth - scaledWidth);
+    const minY = Math.min(0, viewportHeight - scaledHeight);
     return {
       x: Math.min(0, Math.max(next.x, minX)),
       y: Math.min(0, Math.max(next.y, minY)),
@@ -49,10 +67,10 @@ export function ImageCropModal({ imageSrc, fileName, onCancel, onCropped }: Imag
     const width = img.naturalWidth;
     const height = img.naturalHeight;
     setNaturalSize({ width, height });
-    const initialScale = Math.max(VIEWPORT_SIZE / width, VIEWPORT_SIZE / height);
+    const initialScale = Math.max(viewportWidth / width, viewportHeight / height);
     setPos({
-      x: (VIEWPORT_SIZE - width * initialScale) / 2,
-      y: (VIEWPORT_SIZE - height * initialScale) / 2,
+      x: (viewportWidth - width * initialScale) / 2,
+      y: (viewportHeight - height * initialScale) / 2,
     });
     setZoom(1);
   }
@@ -91,14 +109,15 @@ export function ImageCropModal({ imageSrc, fileName, onCancel, onCropped }: Imag
 
     const sourceX = -pos.x / scale;
     const sourceY = -pos.y / scale;
-    const sourceSize = VIEWPORT_SIZE / scale;
+    const sourceWidth = viewportWidth / scale;
+    const sourceHeight = viewportHeight / scale;
 
     const canvas = document.createElement("canvas");
-    canvas.width = OUTPUT_SIZE;
-    canvas.height = OUTPUT_SIZE;
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.drawImage(img, sourceX, sourceY, sourceSize, sourceSize, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+    ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
 
     const blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
     if (!blob) return;
@@ -110,15 +129,15 @@ export function ImageCropModal({ imageSrc, fileName, onCancel, onCropped }: Imag
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4">
-      <div className="w-full max-w-sm rounded-sm border border-sand bg-paper p-5 shadow-lg">
-        <h3 className="font-display text-sm font-bold uppercase tracking-widest text-stone">Adjust photo</h3>
+      <div className="w-full max-w-md rounded-sm border border-sand bg-paper p-5 shadow-lg">
+        <h3 className="font-display text-sm font-bold uppercase tracking-widest text-stone">Adjust image</h3>
         <p className="mt-1 text-xs text-stone">
-          Drag to reposition and use the slider to zoom, so your photo fits neatly in the square thumbnail.
+          Drag to reposition and use the slider to zoom, so your image fits neatly in the frame.
         </p>
 
         <div
           className="relative mx-auto mt-4 touch-none overflow-hidden rounded-sm border border-sand bg-sand"
-          style={{ width: VIEWPORT_SIZE, height: VIEWPORT_SIZE }}
+          style={{ width: viewportWidth, height: viewportHeight }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -128,7 +147,7 @@ export function ImageCropModal({ imageSrc, fileName, onCancel, onCropped }: Imag
           <img
             ref={imgRef}
             src={imageSrc}
-            alt="Photo being cropped"
+            alt="Image being cropped"
             onLoad={handleImageLoad}
             draggable={false}
             className="absolute left-0 top-0 max-w-none origin-top-left select-none"
