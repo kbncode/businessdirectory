@@ -4,9 +4,10 @@ import { buttonClasses } from "@/components/ui/Button";
 import { HeaderSearch } from "@/components/HeaderSearch";
 import { getViewerSession } from "@/lib/auth";
 import { signOut } from "@/lib/auth-viewer";
+import { getActiveHeaderMenuItems } from "@/lib/queries/header-menu";
 
 export async function Header() {
-  const session = await getViewerSession();
+  const [session, menuItems] = await Promise.all([getViewerSession(), getActiveHeaderMenuItems()]);
 
   return (
     <header className="border-b border-sand bg-paper">
@@ -25,10 +26,21 @@ export async function Header() {
 
         <HeaderSearch />
 
-        <nav className="ml-auto flex shrink-0 items-center gap-3">
-          <Link href="/register" className={buttonClasses("primary")}>
-            List your business
-          </Link>
+        <nav className="ml-auto flex shrink-0 flex-wrap items-center gap-3">
+          {menuItems.map((item) => {
+            const external = item.linkType === "EXTERNAL";
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                target={external && item.openInNewTab ? "_blank" : undefined}
+                rel={external && item.openInNewTab ? "noopener noreferrer" : undefined}
+                className={item.isCta ? buttonClasses("primary") : "text-sm font-medium text-ink hover:text-signalOrange"}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
           {session?.user ? (
             <>
               <span className="hidden text-sm text-ink sm:inline">

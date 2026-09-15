@@ -16,6 +16,16 @@ export async function getPageForAdmin(id: string) {
   return prisma.page.findUnique({ where: { id } });
 }
 
+// For the header menu builder's "Page" link-type select — published only,
+// so an admin can never wire up a nav link to a page that 404s.
+export async function getPublishedPagesForSelect() {
+  return prisma.page.findMany({
+    where: { status: "PUBLISHED" },
+    select: { slug: true, title: true },
+    orderBy: { title: "asc" },
+  });
+}
+
 export interface CreatePageResult {
   ok: true;
   page: Awaited<ReturnType<typeof getPageForAdmin>>;
