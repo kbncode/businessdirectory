@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -16,6 +17,7 @@ import {
   Menu as MenuIcon,
   PanelBottom,
   Settings,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +43,7 @@ const SETTINGS_NAV_ITEMS = [{ href: "/admin/settings", label: "Settings", icon: 
 
 export function AdminSidebarNav({ pendingCount }: { pendingCount: number }) {
   const pathname = usePathname();
+  const [contentOpen, setContentOpen] = useState(true);
 
   function isActivePath(href: string) {
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -76,8 +79,16 @@ export function AdminSidebarNav({ pendingCount }: { pendingCount: number }) {
     <nav className="flex flex-col gap-1 px-3 py-4">
       {NAV_ITEMS.map(renderItem)}
 
-      <p className="mb-1 mt-4 px-3 font-display text-xs font-bold uppercase tracking-widest text-stone">Content</p>
-      {CONTENT_NAV_ITEMS.map(renderItem)}
+      <button
+        type="button"
+        onClick={() => setContentOpen((prev) => !prev)}
+        aria-expanded={contentOpen}
+        className="mb-1 mt-4 flex items-center gap-1 px-3 font-display text-xs font-bold uppercase tracking-widest text-stone hover:text-ink"
+      >
+        <ChevronDown className={cn("h-3 w-3 shrink-0 transition-transform", !contentOpen && "-rotate-90")} strokeWidth={2} />
+        Content
+      </button>
+      {contentOpen && CONTENT_NAV_ITEMS.map(renderItem)}
 
       <div className="mt-4 border-t border-sand pt-4">{SETTINGS_NAV_ITEMS.map(renderItem)}</div>
     </nav>
