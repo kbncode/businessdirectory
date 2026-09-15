@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Clock, List, UserRound, Database, Users, Image as ImageIcon, Settings } from "lucide-react";
+import { LayoutDashboard, Clock, List, UserRound, Database, Users, Image as ImageIcon, FileText, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: "/admin/master-data", label: "Master Data", icon: Database },
   { href: "/admin/admin-users", label: "Admin Users", icon: Users },
   { href: "/admin/hero-images", label: "Hero Images", icon: ImageIcon },
+  { href: "/admin/pages", label: "Pages", icon: FileText },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
