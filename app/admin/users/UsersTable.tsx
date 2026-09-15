@@ -56,7 +56,13 @@ export function UsersTable({ initialUsers, initialCursor }: UsersTableProps) {
   }
 
   async function deleteUser(user: ViewerListItem) {
-    if (!window.confirm(`Permanently delete "${user.email}"? This cannot be undone.`)) {
+    const listingWarning =
+      user.businesses.length > 0
+        ? ` This will also permanently delete their ${user.businesses.length} business listing${
+            user.businesses.length === 1 ? "" : "s"
+          }.`
+        : "";
+    if (!window.confirm(`Permanently delete "${user.email}"?${listingWarning} This cannot be undone.`)) {
       return;
     }
 

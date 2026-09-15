@@ -30,4 +30,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    ...viewerAuthConfig.callbacks,
+    // Re-checked on every request (JWT strategy re-runs this callback each
+    // time a session is read, not just at sign-in). An admin-deleted user's
+    // token would otherwise keep authenticating for the rest of its ~30-day
+    // lifetime, since nothing else invalidates it — returning null here
+    // signs them out immediately instead.
+    async jwt(params) {
+      const token = await viewerAuthConfig.callbacks!.jwt!(params);
+      if (token && "userId" in token && token.userId) {
+        const stillExists = await prisma.user.findUnique({
+          where: { id: token.userId as string },
+          select: { id: true },
+        });
+        if (!stillExists) return null;
+      }
+      return token;
+    },
+  },
 });

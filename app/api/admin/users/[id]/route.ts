@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/auth";
+import { deleteAsset } from "@/lib/blob-storage";
 import { getViewerUserForAdmin, deleteViewerUser } from "@/lib/queries/viewer-users";
 
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
@@ -26,6 +27,8 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
   if (!result.ok) {
     return NextResponse.json({ error: result.message ?? "Unable to delete this user." }, { status: 409 });
   }
+
+  await Promise.all(result.deletedAssetUrls.map((url) => deleteAsset(url).catch(() => {})));
 
   return NextResponse.json({ ok: true });
 }

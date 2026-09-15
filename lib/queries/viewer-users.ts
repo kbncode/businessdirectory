@@ -76,22 +76,30 @@ export async function getViewerUserForAdmin(id: string) {
 export interface DeleteViewerResult {
   ok: boolean;
   message?: string;
+  /** Blob URLs (photos/brochures) whose businesses were just removed —
+   * the caller deletes these from storage after the DB transaction commits. */
+  deletedAssetUrls: string[];
 }
 
+// Deleting a user also removes every business they submitted (live listings
+// included) — an account gone from the directory shouldn't leave its
+// content behind. Businesses' own child rows (sub-category links, etc.)
+// already cascade on businessId at the DB level; only the User -> Business
+// edge isn't a cascade, so that side is deleted explicitly here, in the
+// same transaction as the user row so a failure can't leave orphans.
 export async function deleteViewerUser(id: string): Promise<DeleteViewerResult> {
-  const user = await prisma.user.findUnique({ where: { id } });
-  if (!user) return { ok: false, message: "User not found." };
+  const user = await prisma.user.findUnique({
+    where: { id },
+    include: { businesses: { select: { photoUrl: true, brochureUrl: true } } },
+  });
+  if (!user) return { ok: false, message: "User not found.", deletedAssetUrls: [] };
 
-  const businessCount = await prisma.business.count({ where: { submittedById: id } });
-  if (businessCount > 0) {
-    return {
-      ok: false,
-      message: `Can't delete "${user.email}" — they have ${businessCount} business listing${
-        businessCount === 1 ? "" : "s"
-      }. Delete those listings first.`,
-    };
-  }
+  const deletedAssetUrls = user.businesses.flatMap((b) => [b.photoUrl, b.brochureUrl].filter((url): url is string => Boolean(url)));
 
-  await prisma.user.delete({ where: { id } });
-  return { ok: true };
+  await prisma.$transaction([
+    prisma.business.deleteMany({ where: { submittedById: id } }),
+    prisma.user.delete({ where: { id } }),
+  ]);
+
+  return { ok: true, deletedAssetUrls };
 }
