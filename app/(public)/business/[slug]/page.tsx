@@ -53,13 +53,14 @@ export default async function BusinessDetailPage({ params }: Props) {
       <section className="bg-paper py-10 md:py-14">
         <div className="mx-auto max-w-5xl px-4">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-            <div className="h-36 w-36 shrink-0 overflow-hidden rounded-sm border border-sand bg-sand shadow-sm sm:h-44 sm:w-44">
+            <div className="h-48 w-48 shrink-0 overflow-hidden rounded-sm border border-sand bg-sand shadow-sm sm:h-56 sm:w-56">
               {business.photoUrl ? (
+                // object-cover auto-crops to fill the box (center-cropped) —
                 // eslint-disable-next-line @next/next/no-img-element -- user-uploaded photo, host not known ahead of time
                 <img
                   src={business.photoUrl}
                   alt={business.businessName}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover object-center"
                 />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-2">
