@@ -4,6 +4,7 @@ import { useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "rea
 import { useRouter } from "next/navigation";
 import { FormField, fieldInputClass } from "@/components/ui/FormField";
 import { Honeypot } from "@/components/ui/Honeypot";
+import { ImageCropModal } from "@/components/ui/ImageCropModal";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { buttonClasses } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -76,6 +77,13 @@ export function RegisterForm({
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
+  // The original, uncropped selection is kept around (even after cropping)
+  // so "Recrop" can reopen the cropper against the source image instead of
+  // re-cropping an already-cropped square, which would lose resolution and
+  // context on every subsequent adjustment.
+  const [originalPhotoSrc, setOriginalPhotoSrc] = useState<string | null>(null);
+  const [originalPhotoName, setOriginalPhotoName] = useState<string>("photo");
+  const [cropModalOpen, setCropModalOpen] = useState(false);
   const [brochureFile, setBrochureFile] = useState<File | null>(null);
   const [brochureError, setBrochureError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -153,8 +161,25 @@ export function RegisterForm({
       return;
     }
 
+    // A photo is never accepted straight off the disk — it always goes
+    // through the crop modal first, so every uploaded photo is a clean
+    // square that fits the listing thumbnail.
+    setOriginalPhotoName(file.name);
+    setOriginalPhotoSrc(URL.createObjectURL(file));
+    setCropModalOpen(true);
+  }
+
+  function handleCropped(file: File, previewUrl: string) {
     setPhotoFile(file);
-    setPhotoPreview(URL.createObjectURL(file));
+    setPhotoPreview(previewUrl);
+    setCropModalOpen(false);
+  }
+
+  function handleCropCancel() {
+    setCropModalOpen(false);
+    if (!photoFile && photoInputRef.current) {
+      photoInputRef.current.value = "";
+    }
   }
 
   function handleBrochureChange(event: ChangeEvent<HTMLInputElement>) {
@@ -557,10 +582,19 @@ export function RegisterForm({
           {photoPreview ? (
             <div className="mt-3 flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */}
-              <img src={photoPreview} alt="Selected photo preview" className="h-20 w-32 rounded-sm object-cover" />
-              <span className="text-xs text-stone">
-                {photoFile?.name} ({photoFile ? formatBytes(photoFile.size) : ""})
-              </span>
+              <img src={photoPreview} alt="Selected photo preview" className="h-20 w-20 rounded-sm object-cover" />
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-stone">
+                  {photoFile?.name} ({photoFile ? formatBytes(photoFile.size) : ""})
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setCropModalOpen(true)}
+                  className="self-start text-xs font-medium text-ink underline"
+                >
+                  Recrop
+                </button>
+              </div>
             </div>
           ) : (
             isEdit &&
@@ -630,6 +664,15 @@ export function RegisterForm({
       >
         {submitting ? "Saving..." : isEdit ? "Save changes" : "Submit for review"}
       </button>
+
+      {cropModalOpen && originalPhotoSrc && (
+        <ImageCropModal
+          imageSrc={originalPhotoSrc}
+          fileName={originalPhotoName}
+          onCancel={handleCropCancel}
+          onCropped={handleCropped}
+        />
+      )}
     </form>
   );
 }
