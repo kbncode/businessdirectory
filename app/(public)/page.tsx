@@ -3,17 +3,20 @@ import { ArrowRight } from "lucide-react";
 import { BusinessCard } from "@/components/ui/BusinessCard";
 import { CategoryTile } from "@/components/ui/CategoryTile";
 import { HeroCarousel } from "@/components/HeroCarousel";
+import { EventCard } from "@/components/events/EventCard";
 import { getMainCategories, getFeaturedBusinesses } from "@/lib/queries/business";
 import { getActiveHeroImages } from "@/lib/queries/hero-images";
+import { getFeaturedUpcomingEvents } from "@/lib/queries/events";
 import { formatBusinessLocation } from "@/lib/format";
 
 const CATEGORY_PREVIEW_COUNT = 12;
 
 export default async function HomePage() {
-  const [mainCategories, featuredBusinesses, heroImages] = await Promise.all([
+  const [mainCategories, featuredBusinesses, heroImages, featuredEvents] = await Promise.all([
     getMainCategories(),
     getFeaturedBusinesses(),
     getActiveHeroImages(),
+    getFeaturedUpcomingEvents(3),
   ]);
 
   const previewCategories = mainCategories.slice(0, CATEGORY_PREVIEW_COUNT);
@@ -160,6 +163,35 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* ---------- Upcoming events ---------- */}
+      {featuredEvents.length > 0 && (
+        <section className="bg-sand/30 py-16 md:py-20">
+          <div className="mx-auto max-w-6xl px-4">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="font-body text-xs font-semibold uppercase tracking-widest text-stone">
+                  Upcoming events
+                </p>
+                <h2 className="mt-1 font-display text-2xl font-bold text-ink">What&apos;s happening at KBN</h2>
+              </div>
+              <Link
+                href="/events"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-signalOrange hover:underline"
+              >
+                View all events
+                <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+              </Link>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

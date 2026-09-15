@@ -35,6 +35,16 @@ export function formatDateTime(date: Date | string) {
   });
 }
 
+// For pre-filling a <input type="datetime-local"> value. Deliberately reads
+// UTC fields (not local ones) so the round-trip through the form is
+// timezone-independent, matching formatDate/formatDateTime's UTC-pinned
+// display above and the eventDate/endDate values the API stores as-is.
+export function toDatetimeLocalValue(date: Date | string) {
+  const d = new Date(date);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
+}
+
 export function formatBytes(bytes: number) {
   if (bytes < 1024) return `${bytes}B`;
   const kb = bytes / 1024;

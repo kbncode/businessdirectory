@@ -35,6 +35,26 @@ export async function generateUniqueSlug(businessName: string, excludeId?: strin
   return candidate;
 }
 
+// Same collision-suffix approach as generateUniqueSlug above, over Event
+// instead of Business.
+export async function generateUniqueEventSlug(title: string, excludeId?: string): Promise<string> {
+  const base = slugify(title);
+  let candidate = base;
+  let suffix = 2;
+
+  while (
+    await prisma.event.findFirst({
+      where: { slug: candidate, ...(excludeId ? { id: { not: excludeId } } : {}) },
+      select: { id: true },
+    })
+  ) {
+    candidate = `${base}-${suffix}`;
+    suffix += 1;
+  }
+
+  return candidate;
+}
+
 // Same collision-suffix approach as generateUniqueSlug above, over Page
 // instead of Business. Kept separate rather than made generic since the two
 // models aren't related and a shared helper would need an awkward
