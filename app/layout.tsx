@@ -39,23 +39,24 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // The public Header/nav (search, "List your business", viewer login) is
-  // irrelevant chrome once inside the authenticated admin panel — it has
-  // its own sidebar nav and account controls. Only suppressed for a
-  // logged-in admin; the admin login page itself still gets the public
-  // Header since at that point there's no admin session yet.
+  // The public Header/Footer (search, "List your business", viewer login,
+  // footer links) are irrelevant chrome once inside the authenticated admin
+  // panel — it has its own sidebar nav and account controls. Only
+  // suppressed for a logged-in admin; the admin login page itself still
+  // gets the public Header/Footer since at that point there's no admin
+  // session yet.
   const pathname = headers().get("x-pathname") ?? "";
   const isAdminRoute = pathname.startsWith("/admin");
   const adminSession = isAdminRoute ? await getAdminSession() : null;
-  const hidePublicHeader = isAdminRoute && Boolean(adminSession?.user);
+  const hidePublicChrome = isAdminRoute && Boolean(adminSession?.user);
 
   return (
     <html lang="en" className={`${manrope.variable} ${inter.variable}`}>
       <body className="flex min-h-screen flex-col bg-paper font-body text-ink antialiased">
         <InstallPrompt />
-        {!hidePublicHeader && <Header />}
+        {!hidePublicChrome && <Header />}
         <main className="flex-1">{children}</main>
-        <Footer />
+        {!hidePublicChrome && <Footer />}
       </body>
     </html>
   );
