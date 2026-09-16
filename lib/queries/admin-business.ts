@@ -1,4 +1,5 @@
 import type { Prisma, BusinessStatus } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { encodeCursor, decodeCursor } from "@/lib/cursor";
 import type { CursorPage } from "@/lib/queries/business";
@@ -34,9 +35,19 @@ export async function getPendingBusinesses() {
   });
 }
 
-export async function getPendingCount() {
-  return prisma.business.count({ where: { status: "PENDING" } });
-}
+// The admin layout fetches this on *every* admin page navigation just to
+// show a sidebar badge — that was a full sequential DB round-trip ahead of
+// each page's own data fetch (a real, measured contributor to slow admin
+// LCP, compounding badly whenever the Neon compute is cold). A 30s cache is
+// imperceptible for a badge count and cuts that per-navigation DB hit
+// almost entirely; the "pending-count" tag is available for exact
+// invalidation from the approve/reject mutations if that's ever worth it,
+// but isn't required for correctness at this staleness window.
+export const getPendingCount = unstable_cache(
+  async () => prisma.business.count({ where: { status: "PENDING" } }),
+  ["pending-count"],
+  { tags: ["pending-count"], revalidate: 30 }
+);
 
 export interface AdminListingFilters {
   status?: BusinessStatus;
