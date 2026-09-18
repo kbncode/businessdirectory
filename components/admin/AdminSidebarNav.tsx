@@ -14,6 +14,7 @@ import {
   Images,
   FileText,
   CalendarDays,
+  Megaphone,
   Menu as MenuIcon,
   PanelBottom,
   Settings,
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/pending", label: "Pending Review", icon: Clock, badgeKey: "pending" as const },
   { href: "/admin/listings", label: "All Listings", icon: List },
+  { href: "/admin/promotions", label: "Promotions", icon: Megaphone, badgeKey: "promotionPending" as const },
   { href: "/admin/users", label: "Users", icon: UserRound },
   { href: "/admin/master-data", label: "Master Data", icon: Database },
   { href: "/admin/admin-users", label: "Admin Users", icon: Users },
@@ -41,7 +43,12 @@ const CONTENT_NAV_ITEMS = [
 
 const SETTINGS_NAV_ITEMS = [{ href: "/admin/settings", label: "Settings", icon: Settings }];
 
-export function AdminSidebarNav({ pendingCount }: { pendingCount: number }) {
+interface AdminSidebarNavProps {
+  pendingCount: number;
+  promotionPendingCount: number;
+}
+
+export function AdminSidebarNav({ pendingCount, promotionPendingCount }: AdminSidebarNavProps) {
   const pathname = usePathname();
   const [contentOpen, setContentOpen] = useState(true);
 
@@ -51,7 +58,12 @@ export function AdminSidebarNav({ pendingCount }: { pendingCount: number }) {
 
   function renderItem(item: (typeof NAV_ITEMS)[number]) {
     const isActive = isActivePath(item.href);
-    const badge = "badgeKey" in item && item.badgeKey === "pending" ? pendingCount : 0;
+    const badge =
+      "badgeKey" in item && item.badgeKey === "pending"
+        ? pendingCount
+        : "badgeKey" in item && item.badgeKey === "promotionPending"
+          ? promotionPendingCount
+          : 0;
 
     return (
       <Link

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getAdminSession } from "@/lib/auth";
 import { signOut } from "@/lib/auth-admin";
 import { getPendingCount } from "@/lib/queries/admin-business";
+import { getPendingPromotionCount } from "@/lib/queries/admin-promotions";
 import { AdminSidebarNav } from "@/components/admin/AdminSidebarNav";
 import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
 
@@ -12,7 +13,9 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await getAdminSession();
-  const pendingCount = session?.user ? await getPendingCount() : 0;
+  const [pendingCount, promotionPendingCount] = session?.user
+    ? await Promise.all([getPendingCount(), getPendingPromotionCount()])
+    : [0, 0];
 
   if (!session?.user) {
     return <div className="min-h-screen bg-paper">{children}</div>;
@@ -38,7 +41,7 @@ export default async function AdminLayout({
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <AdminSidebarNav pendingCount={pendingCount} />
+          <AdminSidebarNav pendingCount={pendingCount} promotionPendingCount={promotionPendingCount} />
         </div>
 
         <div className="border-t border-sand px-5 py-4">
@@ -89,7 +92,7 @@ export default async function AdminLayout({
             </button>
           </form>
         </div>
-        <AdminMobileNav pendingCount={pendingCount} />
+        <AdminMobileNav pendingCount={pendingCount} promotionPendingCount={promotionPendingCount} />
 
         <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">{children}</div>

@@ -13,6 +13,7 @@ import {
   Images,
   FileText,
   CalendarDays,
+  Megaphone,
   Menu as MenuIcon,
   PanelBottom,
   Settings,
@@ -23,6 +24,7 @@ const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/pending", label: "Pending", icon: Clock, badgeKey: "pending" as const },
   { href: "/admin/listings", label: "Listings", icon: List },
+  { href: "/admin/promotions", label: "Promotions", icon: Megaphone, badgeKey: "promotionPending" as const },
   { href: "/admin/users", label: "Users", icon: UserRound },
   { href: "/admin/master-data", label: "Master Data", icon: Database },
   { href: "/admin/admin-users", label: "Admin Users", icon: Users },
@@ -41,12 +43,22 @@ const SETTINGS_NAV_ITEMS = [{ href: "/admin/settings", label: "Settings", icon: 
 
 // Sidebar collapses to this horizontally-scrollable strip below md — same
 // light theme, just a different shape for narrow screens.
-export function AdminMobileNav({ pendingCount }: { pendingCount: number }) {
+interface AdminMobileNavProps {
+  pendingCount: number;
+  promotionPendingCount: number;
+}
+
+export function AdminMobileNav({ pendingCount, promotionPendingCount }: AdminMobileNavProps) {
   const pathname = usePathname();
 
   function renderItem(item: (typeof NAV_ITEMS)[number]) {
     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-    const badge = "badgeKey" in item && item.badgeKey === "pending" ? pendingCount : 0;
+    const badge =
+      "badgeKey" in item && item.badgeKey === "pending"
+        ? pendingCount
+        : "badgeKey" in item && item.badgeKey === "promotionPending"
+          ? promotionPendingCount
+          : 0;
 
     return (
       <Link
