@@ -68,9 +68,12 @@ function CardBody({ promotion, businessLink }: { promotion: PromotionWithBusines
       <span className="font-display text-lg font-bold leading-snug text-ink">{promotion.title}</span>
 
       {businessLink ? (
+        // Only reached from the ADVERTISEMENT branch below, which renders a
+        // plain <div> rather than wrapping the card in its own Link — so
+        // there's no outer link for this one to be nested inside or need
+        // to stop propagation from.
         <Link
           href={`/business/${promotion.business.slug}`}
-          onClick={(e) => e.stopPropagation()}
           className="w-fit text-sm text-stone hover:text-ink hover:underline"
         >
           {promotion.business.businessName}
