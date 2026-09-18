@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Store } from "lucide-react";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { buttonClasses } from "@/components/ui/Button";
+import { MakeOfferAction } from "@/components/promotions/MakeOfferAction";
 import { getViewerSession } from "@/lib/auth";
 import { getMyListings } from "@/lib/queries/my-listings";
 import { formatDate } from "@/lib/format";
@@ -18,9 +19,12 @@ export default async function MyListingsPage() {
     <div className="mx-auto max-w-4xl px-4 py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-display text-2xl font-bold text-ink">My listings</h1>
-        <Link href="/register" className={buttonClasses("primary")}>
-          List a new business
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <MakeOfferAction ownerId={session.user.id} className="text-sm" />
+          <Link href="/register" className={buttonClasses("primary")}>
+            List a new business
+          </Link>
+        </div>
       </div>
 
       {listings.length === 0 ? (

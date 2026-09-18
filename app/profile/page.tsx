@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CircleUser } from "lucide-react";
 import { buttonClasses } from "@/components/ui/Button";
+import { MakeOfferAction } from "@/components/promotions/MakeOfferAction";
 import { getViewerSession } from "@/lib/auth";
 import { signOut } from "@/lib/auth-viewer";
 import { cn } from "@/lib/utils";
@@ -26,9 +27,13 @@ export default async function ProfilePage() {
       </div>
 
       <div className="mt-6 flex flex-col gap-3">
-        <Link href="/my-listings" className={buttonClasses("primary")}>
+        <Link href="/my-listings" className={buttonClasses("secondary")}>
           My listings
         </Link>
+        <Link href="/my-offers" className={buttonClasses("secondary")}>
+          My offers
+        </Link>
+        <MakeOfferAction ownerId={session.user.id} />
 
         <form
           action={async () => {
