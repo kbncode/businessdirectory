@@ -24,6 +24,12 @@ export function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString("en-US", { timeZone: "UTC", year: "numeric", month: "short", day: "numeric" });
 }
 
+// "Mar 15" — no year, for a compact subtle date like a promotion's end date
+// where the year is implied (it's always upcoming/current).
+export function formatMonthDay(date: Date | string) {
+  return new Date(date).toLocaleDateString("en-US", { timeZone: "UTC", month: "short", day: "numeric" });
+}
+
 export function formatDateTime(date: Date | string) {
   return new Date(date).toLocaleString("en-US", {
     timeZone: "UTC",

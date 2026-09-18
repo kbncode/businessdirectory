@@ -50,14 +50,21 @@ export async function getAllPromotionsForAdmin(
   filters: AdminPromotionFilters,
   cursorToken?: string
 ): Promise<CursorPage<AdminPromotionListItem>> {
-  const where: Prisma.PromotionWhereInput = {};
+  // Each filter that needs its own OR clause pushes one AND'd sub-condition
+  // here instead of writing where.OR directly — status/search/cursor can
+  // all be active together, and a plain `where.OR = [...]` from a later
+  // filter would silently clobber an earlier one's.
+  const andConditions: Prisma.PromotionWhereInput[] = [];
+  const where: Prisma.PromotionWhereInput = { AND: andConditions };
 
-  // "Expired" isn't a stored status (see lib/promotion-status.ts) — it's an
-  // APPROVED row whose endDate has passed, so the filter is expressed as
-  // that condition directly rather than a status equality.
+  // "Expired" means either: the cron has already flipped the stored status
+  // to EXPIRED, or it hasn't run yet and the row is still sitting there as
+  // APPROVED with a past endDate (lib/promotion-status.ts's
+  // getPromotionDisplayStatus treats both the same for display) — the tab
+  // has to catch both so a promotion doesn't briefly vanish from every tab
+  // in the gap between it expiring and the next cron run.
   if (filters.status === "EXPIRED") {
-    where.status = "APPROVED";
-    where.endDate = { lt: new Date() };
+    andConditions.push({ OR: [{ status: "EXPIRED" }, { status: "APPROVED", endDate: { lt: new Date() } }] });
   } else if (filters.status) {
     where.status = filters.status;
     if (filters.status === "APPROVED") {
@@ -68,18 +75,19 @@ export async function getAllPromotionsForAdmin(
   }
 
   if (filters.q) {
-    where.OR = [
-      { title: { contains: filters.q, mode: "insensitive" } },
-      { business: { businessName: { contains: filters.q, mode: "insensitive" } } },
-    ];
+    andConditions.push({
+      OR: [
+        { title: { contains: filters.q, mode: "insensitive" } },
+        { business: { businessName: { contains: filters.q, mode: "insensitive" } } },
+      ],
+    });
   }
 
   const cursor = cursorToken ? decodeCursor(cursorToken) : null;
   if (cursor) {
-    where.AND = [
-      ...(Array.isArray(where.AND) ? where.AND : where.AND ? [where.AND] : []),
-      { OR: [{ createdAt: { lt: cursor.createdAt } }, { createdAt: cursor.createdAt, id: { lt: cursor.id } }] },
-    ];
+    andConditions.push({
+      OR: [{ createdAt: { lt: cursor.createdAt } }, { createdAt: cursor.createdAt, id: { lt: cursor.id } }],
+    });
   }
 
   const take = 20;

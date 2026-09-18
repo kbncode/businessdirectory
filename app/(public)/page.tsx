@@ -4,19 +4,22 @@ import { BusinessCard } from "@/components/ui/BusinessCard";
 import { CategoryTile } from "@/components/ui/CategoryTile";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { EventCard } from "@/components/events/EventCard";
+import { PromotionOfferCard } from "@/components/promotions/PromotionOfferCard";
 import { getMainCategories, getFeaturedBusinesses } from "@/lib/queries/business";
 import { getActiveHeroImages } from "@/lib/queries/hero-images";
 import { getFeaturedUpcomingEvents } from "@/lib/queries/events";
+import { getFeaturedOffers } from "@/lib/queries/promotions";
 import { formatBusinessLocation } from "@/lib/format";
 
 const CATEGORY_PREVIEW_COUNT = 12;
 
 export default async function HomePage() {
-  const [mainCategories, featuredBusinesses, heroImages, featuredEvents] = await Promise.all([
+  const [mainCategories, featuredBusinesses, heroImages, featuredEvents, featuredOffers] = await Promise.all([
     getMainCategories(),
     getFeaturedBusinesses(),
     getActiveHeroImages(),
     getFeaturedUpcomingEvents(3),
+    getFeaturedOffers(8),
   ]);
 
   const previewCategories = mainCategories.slice(0, CATEGORY_PREVIEW_COUNT);
@@ -124,6 +127,22 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ---------- Featured offers ---------- */}
+      {featuredOffers.length > 0 && (
+        <section className="bg-paper py-16 md:py-20">
+          <div className="mx-auto max-w-6xl px-4">
+            <p className="font-body text-xs font-semibold uppercase tracking-widest text-stone">Featured offers</p>
+            <h2 className="mt-1 font-display text-2xl font-bold text-ink">Deals from the KBN network</h2>
+
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredOffers.map((promotion) => (
+                <PromotionOfferCard key={promotion.id} promotion={promotion} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ---------- Featured listings ---------- */}
       <section className="bg-paper py-16 md:py-20">
