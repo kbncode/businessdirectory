@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  /* A hard backstop against page-wide horizontal scroll (e.g. from any
+     fixed-position element, like the mobile bottom nav, that momentarily
+     overflows the viewport) — content should always reflow within the
+     screen width, never require sideways scrolling to reach. */
+  overflow-x: hidden;
+}
+
 body {
   @apply bg-paper text-ink font-body;
 }

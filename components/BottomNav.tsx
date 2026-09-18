@@ -30,7 +30,13 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-sand bg-paper pb-[env(safe-area-inset-bottom)] md:hidden"
       aria-label="Primary"
     >
-      <div className="flex items-stretch justify-around">
+      {/* min-w-0 is load-bearing: flex items default to min-width:auto, which
+          refuses to shrink below content width and was pushing this row wider
+          than the viewport (forcing horizontal scroll on the whole page,
+          since an overflowing fixed element still expands document scroll
+          width). overflow-hidden is a hard backstop so nothing can ever
+          escape the bar even if a label somehow doesn't fit. */}
+      <div className="flex items-stretch overflow-hidden">
         {TABS.map((tab) => {
           const active = tab.match(pathname);
           return (
@@ -38,12 +44,12 @@ export function BottomNav() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                "flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
+                "flex min-w-0 flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium leading-tight transition-colors",
                 active ? "text-signalOrange" : "text-stone"
               )}
             >
-              <tab.icon className="h-5 w-5" strokeWidth={1.75} />
-              {tab.label}
+              <tab.icon className="h-5 w-5 shrink-0" strokeWidth={1.75} />
+              <span className="w-full truncate text-center">{tab.label}</span>
             </Link>
           );
         })}
