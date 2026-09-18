@@ -1,11 +1,18 @@
 "use client";
 
-import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { FormField, fieldInputClass } from "@/components/ui/FormField";
 import { buttonClasses } from "@/components/ui/Button";
+import { ImageCropModal } from "@/components/ui/ImageCropModal";
 import { AdminToast, type AdminToastValue } from "@/components/admin/AdminToast";
 import { cn } from "@/lib/utils";
+import { PROMOTION_IMAGE_MAX_WIDTH } from "@/lib/promotion-constants";
+
+// Matches the aspect-[4/3] box PromotionOfferCard renders images in — the
+// crop modal exports at that same ratio so what the owner approves here is
+// exactly what visitors see, not re-cropped a second time by object-cover.
+const PROMOTION_IMAGE_ASPECT_RATIO = 4 / 3;
 import { PROMOTION_TYPES, DESCRIPTION_MAX, MAX_PROMOTION_DAYS, validatePromotionCommon } from "@/lib/promotion-validation";
 import { DISCOUNT_TYPES } from "@/lib/promotion-details-schema";
 import type { getMyApprovedBusinesses } from "@/lib/queries/promotions";
@@ -39,6 +46,13 @@ export function PromotionForm({ businesses, activeBusinessIds }: PromotionFormPr
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
+  // A raw upload is never accepted as-is — it always goes through the crop
+  // modal first, same mandatory-crop pattern as hero images and business
+  // listing photos.
+  const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
+  const [originalImageName, setOriginalImageName] = useState("image");
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [offer, setOffer] = useState(EMPTY_OFFER);
   const [ad, setAd] = useState(EMPTY_AD);
@@ -70,8 +84,22 @@ export function PromotionForm({ businesses, activeBusinessIds }: PromotionFormPr
       return;
     }
 
+    setOriginalImageName(file.name);
+    setOriginalImageSrc(URL.createObjectURL(file));
+    setCropModalOpen(true);
+  }
+
+  function handleImageCropped(file: File, previewUrl: string) {
     setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    setImagePreview(previewUrl);
+    setCropModalOpen(false);
+  }
+
+  function handleImageCropCancel() {
+    setCropModalOpen(false);
+    if (!imageFile && imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -229,17 +257,32 @@ export function PromotionForm({ businesses, activeBusinessIds }: PromotionFormPr
               />
             </FormField>
 
-            <FormField label="Image" htmlFor="po-image" error={imageError ?? undefined} hint="Optional. Max 3MB. JPG, PNG, or WebP.">
+            <FormField
+              label="Image"
+              htmlFor="po-image"
+              error={imageError ?? undefined}
+              hint="Optional. Max 3MB. JPG, PNG, or WebP. You'll crop it to fit the card after choosing a file."
+            >
               <input
                 id="po-image"
+                ref={imageInputRef}
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
                 onChange={handleImageChange}
                 className="w-full text-sm text-ink file:mr-3 file:rounded-sm file:border-0 file:bg-signalOrange file:px-3 file:py-2 file:text-sm file:font-medium file:text-ink"
               />
               {imagePreview && (
-                // eslint-disable-next-line @next/next/no-img-element -- local object URL preview
-                <img src={imagePreview} alt="Selected image preview" className="mt-3 h-24 w-40 rounded-sm border border-sand object-cover" />
+                <div className="mt-3 flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */}
+                  <img src={imagePreview} alt="Selected image preview" className="h-24 w-32 rounded-sm border border-sand object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setCropModalOpen(true)}
+                    className="text-xs font-medium text-ink underline"
+                  >
+                    Recrop
+                  </button>
+                </div>
               )}
             </FormField>
 
@@ -445,6 +488,17 @@ export function PromotionForm({ businesses, activeBusinessIds }: PromotionFormPr
             {submitting ? "Submitting..." : "Submit for review"}
           </button>
         </form>
+      )}
+
+      {cropModalOpen && originalImageSrc && (
+        <ImageCropModal
+          imageSrc={originalImageSrc}
+          fileName={originalImageName}
+          aspectRatio={PROMOTION_IMAGE_ASPECT_RATIO}
+          outputWidth={PROMOTION_IMAGE_MAX_WIDTH}
+          onCancel={handleImageCropCancel}
+          onCropped={handleImageCropped}
+        />
       )}
     </div>
   );
