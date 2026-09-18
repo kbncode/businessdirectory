@@ -26,6 +26,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   resetTokens   PasswordResetToken[]
+  promotions    Promotion[]
 
   @@map("users")
 }
@@ -261,6 +262,8 @@ model Business {
   // only ever queried via $queryRaw in lib/queries/business.ts.
   searchVector      Unsupported("tsvector")?
 
+  promotions        Promotion[]
+
   @@index([countryId, stateId, city, status])
   @@index([mainCategoryId, status])
   @@index([submittedById])
@@ -411,4 +414,49 @@ model Event {
   @@index([status, eventDate])
   @@index([isFeatured, status])
   @@map("events")
+}
+
+// ---------- Promotions (offers / advertisements / campaigns) ----------
+
+enum PromotionType {
+  OFFER
+  ADVERTISEMENT
+  CAMPAIGN
+}
+
+enum PromotionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+  REMOVED
+}
+
+model Promotion {
+  id            String   @id @default(cuid())
+  businessId    String
+  business      Business @relation(fields: [businessId], references: [id])
+  submittedById String
+  submittedBy   User     @relation(fields: [submittedById], references: [id])
+
+  type        PromotionType
+  title       String
+  description String
+  imageUrl    String?
+  startDate   DateTime
+  endDate     DateTime
+  details     Json // type-specific fields, shape depends on `type`
+
+  status          PromotionStatus @default(PENDING)
+  rejectionReason String?
+  sortOrder       Int?
+  approvedAt      DateTime?
+  removedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, endDate])
+  @@index([businessId, status])
+  @@map("promotions")
 }
