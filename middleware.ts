@@ -32,7 +32,7 @@ export default async function middleware(req: NextRequest) {
     }
   }
 
-  if (pathname.startsWith("/my-listings")) {
+  if (pathname.startsWith("/my-listings") || pathname.startsWith("/profile")) {
     const session = await viewerAuth();
     if (!session) {
       const loginUrl = new URL("/login", req.url);
@@ -45,5 +45,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*", "/my-listings/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*", "/my-listings/:path*", "/profile/:path*"],
 };

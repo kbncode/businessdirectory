@@ -5,6 +5,8 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { InstallPrompt } from "@/components/InstallPrompt";
+import { BottomNav } from "@/components/BottomNav";
+import { cn } from "@/lib/utils";
 import { getAdminSession } from "@/lib/auth";
 
 const manrope = Manrope({
@@ -55,8 +57,12 @@ export default async function RootLayout({
       <body className="flex min-h-screen flex-col bg-paper font-body text-ink antialiased">
         <InstallPrompt />
         {!hidePublicChrome && <Header />}
-        <main className="flex-1">{children}</main>
+        {/* Bottom nav is fixed and only visible below md, so its own
+            content never needs page padding on desktop — pb-16 clears it
+            on mobile without affecting larger viewports. */}
+        <main className={cn("flex-1", !isAdminRoute && "pb-16 md:pb-0")}>{children}</main>
         {!hidePublicChrome && <Footer />}
+        {!isAdminRoute && <BottomNav />}
       </body>
     </html>
   );
