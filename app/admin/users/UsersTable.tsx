@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { buttonClasses } from "@/components/ui/Button";
 import { AdminToast, type AdminToastValue } from "@/components/admin/AdminToast";
 import { ViewerListingBadge } from "@/components/admin/ViewerListingBadge";
 import { ViewerUserDetailView } from "@/components/admin/ViewerUserDetailView";
+import { EditUserForm } from "@/components/admin/EditUserForm";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { getViewerListingStatus, type ViewerListItem, type getViewerUserForAdmin } from "@/lib/queries/viewer-users";
@@ -26,6 +27,7 @@ export function UsersTable({ initialUsers, initialCursor }: UsersTableProps) {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [detail, setDetail] = useState<FullViewerUser | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [editing, setEditing] = useState<ViewerListItem | null>(null);
 
   async function loadMore() {
     if (!cursor || loadingMore) return;
@@ -123,6 +125,15 @@ export function UsersTable({ initialUsers, initialCursor }: UsersTableProps) {
                       </button>
                       <button
                         type="button"
+                        title="Edit user"
+                        aria-label="Edit user"
+                        onClick={() => setEditing(user)}
+                        className="rounded-sm p-2 text-stone transition-colors hover:bg-sand hover:text-ink"
+                      >
+                        <Pencil className="h-4 w-4" strokeWidth={1.75} />
+                      </button>
+                      <button
+                        type="button"
                         title="Delete user"
                         aria-label="Delete user"
                         disabled={busyId === user.id}
@@ -159,6 +170,18 @@ export function UsersTable({ initialUsers, initialCursor }: UsersTableProps) {
         ) : detail ? (
           <ViewerUserDetailView user={detail} />
         ) : null}
+      </Modal>
+
+      <Modal open={editing !== null} onClose={() => setEditing(null)} title="Edit user">
+        {editing && (
+          <EditUserForm
+            user={editing}
+            onSaved={(updated) => {
+              setUsers((prev) => prev.map((u) => (u.id === updated.id ? { ...u, name: updated.name } : u)));
+              setEditing(null);
+            }}
+          />
+        )}
       </Modal>
     </div>
   );

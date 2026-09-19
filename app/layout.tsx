@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { BottomNav } from "@/components/BottomNav";
 import { cn } from "@/lib/utils";
-import { getAdminSession } from "@/lib/auth";
+import { getAdminSession, getViewerSession } from "@/lib/auth";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -49,8 +49,15 @@ export default async function RootLayout({
   // session yet.
   const pathname = headers().get("x-pathname") ?? "";
   const isAdminRoute = pathname.startsWith("/admin");
-  const adminSession = isAdminRoute ? await getAdminSession() : null;
+  const [adminSession, viewerSession] = await Promise.all([
+    isAdminRoute ? getAdminSession() : Promise.resolve(null),
+    isAdminRoute ? Promise.resolve(null) : getViewerSession(),
+  ]);
   const hidePublicChrome = isAdminRoute && Boolean(adminSession?.user);
+  // A signed-in viewer already has the dashboard sidebar (and the header's
+  // own Dashboard CTA) for navigation — the marketing/site footer is aimed
+  // at a visitor who isn't signed in yet, so it's dropped once they are.
+  const hideFooter = hidePublicChrome || Boolean(viewerSession?.user);
 
   return (
     <html lang="en" className={`${manrope.variable} ${inter.variable}`}>
@@ -61,7 +68,7 @@ export default async function RootLayout({
             content never needs page padding on desktop — pb-16 clears it
             on mobile without affecting larger viewports. */}
         <main className={cn("flex-1", !isAdminRoute && "pb-16 md:pb-0")}>{children}</main>
-        {!hidePublicChrome && <Footer />}
+        {!hideFooter && <Footer />}
         {!isAdminRoute && <BottomNav />}
       </body>
     </html>

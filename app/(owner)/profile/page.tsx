@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CircleUser } from "lucide-react";
 import { buttonClasses } from "@/components/ui/Button";
 import { MakeOfferAction } from "@/components/promotions/MakeOfferAction";
+import { ChangePasswordForm } from "@/components/owner/ChangePasswordForm";
 import { getViewerSession } from "@/lib/auth";
 import { signOut } from "@/lib/auth-viewer";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,14 @@ export default async function ProfilePage() {
         <div className="min-w-0">
           <p className="truncate font-display text-base font-bold text-ink">{session.user.name ?? "—"}</p>
           <p className="truncate text-sm text-stone">{session.user.email}</p>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-sm border border-sand bg-paper p-5">
+        <h2 className="font-display text-base font-bold text-ink">Change password</h2>
+        <p className="mt-1 text-sm text-stone">Update the password used to sign in to your account.</p>
+        <div className="mt-4">
+          <ChangePasswordForm />
         </div>
       </div>
 
