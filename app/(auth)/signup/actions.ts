@@ -13,7 +13,7 @@ const HONEYPOT_FIELD = "website_url";
 
 export async function signupAction(_prevState: SignupState, formData: FormData): Promise<SignupState> {
   const ip = getClientIpFromHeaders();
-  const callbackUrl = String(formData.get("callbackUrl") || "/");
+  const callbackUrl = String(formData.get("callbackUrl") || "/dashboard");
 
   const honeypot = String(formData.get(HONEYPOT_FIELD) || "").trim();
   if (honeypot) {

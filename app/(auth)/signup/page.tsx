@@ -23,7 +23,7 @@ function SubmitButton() {
 
 export default function SignupPage() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const [state, formAction] = useFormState(signupAction, initialState);
 
   return (

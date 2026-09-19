@@ -32,7 +32,12 @@ export default async function middleware(req: NextRequest) {
     }
   }
 
-  if (pathname.startsWith("/my-listings") || pathname.startsWith("/profile") || pathname.startsWith("/my-offers")) {
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/my-listings") ||
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/my-offers")
+  ) {
     const session = await viewerAuth();
     if (!session) {
       const loginUrl = new URL("/login", req.url);
@@ -45,5 +50,12 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*", "/my-listings/:path*", "/profile/:path*", "/my-offers/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/api/admin/:path*",
+    "/dashboard/:path*",
+    "/my-listings/:path*",
+    "/profile/:path*",
+    "/my-offers/:path*",
+  ],
 };

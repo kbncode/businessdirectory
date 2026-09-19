@@ -15,7 +15,7 @@ export async function loginAction(_prevState: LoginState, formData: FormData): P
 
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
-  const callbackUrl = String(formData.get("callbackUrl") || "/");
+  const callbackUrl = String(formData.get("callbackUrl") || "/dashboard");
 
   if (!email || !password) {
     return { error: "Email and password are required." };
