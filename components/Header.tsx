@@ -3,11 +3,16 @@ import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
 import { HeaderSearch } from "@/components/HeaderSearch";
 import { getViewerSession } from "@/lib/auth";
-import { signOut } from "@/lib/auth-viewer";
 import { getActiveHeaderMenuItems } from "@/lib/queries/header-menu";
 
 export async function Header() {
-  const [session, menuItems] = await Promise.all([getViewerSession(), getActiveHeaderMenuItems()]);
+  const [session, allMenuItems] = await Promise.all([getViewerSession(), getActiveHeaderMenuItems()]);
+
+  // A CTA item (e.g. "List Your Business") is there to recruit a
+  // prospective owner who doesn't have an account yet — a signed-in viewer
+  // already does, so it's dropped rather than checked by label, which would
+  // silently stop working the moment an admin renames it.
+  const menuItems = session?.user ? allMenuItems.filter((item) => !item.isCta) : allMenuItems;
 
   return (
     <header className="border-b border-sand bg-paper">
@@ -46,19 +51,9 @@ export async function Header() {
               <span className="hidden text-sm text-ink sm:inline">
                 {session.user.name ?? session.user.email}
               </span>
-              <Link href="/my-listings" className={buttonClasses("ghost")}>
-                My listings
+              <Link href="/dashboard" className={buttonClasses("primary")}>
+                Dashboard
               </Link>
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut({ redirectTo: "/" });
-                }}
-              >
-                <button type="submit" className={buttonClasses("secondary")}>
-                  Log out
-                </button>
-              </form>
             </>
           ) : (
             <>
