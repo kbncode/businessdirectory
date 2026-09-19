@@ -28,6 +28,18 @@ model User {
   resetTokens   PasswordResetToken[]
   promotions    Promotion[]
 
+  // Set once, at the moment credentials are verified (lib/auth-viewer.ts's
+  // authorize()) — distinct from lastActiveAt below since a JWT session
+  // stays valid for ~30 days without re-authenticating, so "last logged in"
+  // and "last active" are genuinely different facts. Nullable because
+  // existing users have never had a real login event recorded.
+  lastLoginAt  DateTime?
+  // Touched (throttled) on every page load while signed in — see
+  // lib/viewer-activity.ts. Used only as a short-window "currently online"
+  // presence signal for the admin dashboard's live user count, not a
+  // precise session record.
+  lastActiveAt DateTime?
+
   @@map("users")
 }
 
@@ -496,4 +508,18 @@ model PromotionEvent {
   @@unique([promotionId, eventType, visitorKey, eventDate])
   @@index([promotionId, eventType, eventDate])
   @@map("promotion_events")
+}
+
+// Site-wide visit tracking for the admin dashboard's visitor stats — same
+// visitor-key + day dedup shape as BusinessView, just without a businessId
+// since this counts a hit on any public page, not one business's listing.
+model SiteVisit {
+  id         String   @id @default(cuid())
+  visitorKey String
+  viewDate   DateTime // truncated to date (midnight UTC)
+  createdAt  DateTime @default(now())
+
+  @@unique([visitorKey, viewDate])
+  @@index([viewDate])
+  @@map("site_visits")
 }

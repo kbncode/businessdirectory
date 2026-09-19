@@ -26,6 +26,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await verifyPassword(password, user.passwordHash);
         if (!valid) return null;
 
+        // A real authentication event — distinct from lastActiveAt (see
+        // lib/viewer-activity.ts), which tracks ongoing presence across the
+        // ~30-day life of the JWT session this login is about to start.
+        await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+
         return { id: user.id, email: user.email, name: user.name };
       },
     }),

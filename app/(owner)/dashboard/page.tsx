@@ -3,7 +3,7 @@ import { List, Megaphone, Eye, MousePointerClick, ArrowRight, CalendarDays, Cale
 import type { LucideIcon } from "lucide-react";
 import { MakeOfferAction } from "@/components/promotions/MakeOfferAction";
 import { BusinessFilterSelect } from "@/components/owner/BusinessFilterSelect";
-import { DateRangeTabs } from "@/components/owner/DateRangeTabs";
+import { DateRangeTabs } from "@/components/ui/DateRangeTabs";
 import { ProfileViewsChart } from "@/components/owner/ProfileViewsChart";
 import { PromotionEventsChart } from "@/components/owner/PromotionEventsChart";
 import { getViewerSession } from "@/lib/auth";

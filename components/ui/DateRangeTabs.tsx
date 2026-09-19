@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
-import type { DateRangePreset } from "@/lib/queries/owner-dashboard";
+import type { DateRangePreset } from "@/lib/date-range";
 
 const PRESETS: { value: DateRangePreset; label: string }[] = [
   { value: "today", label: "Today" },

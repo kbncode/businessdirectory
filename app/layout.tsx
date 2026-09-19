@@ -6,8 +6,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { BottomNav } from "@/components/BottomNav";
+import { TrackSiteVisit } from "@/components/TrackSiteVisit";
 import { cn } from "@/lib/utils";
 import { getAdminSession, getViewerSession } from "@/lib/auth";
+import { touchViewerActivity } from "@/lib/viewer-activity";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -59,10 +61,19 @@ export default async function RootLayout({
   // at a visitor who isn't signed in yet, so it's dropped once they are.
   const hideFooter = hidePublicChrome || Boolean(viewerSession?.user);
 
+  // Fire-and-forget-ish: awaited (Vercel's Node functions can't reliably
+  // run work after the response is sent without an explicit waitUntil), but
+  // throttled at the DB layer itself so it's a fast no-op write on every
+  // request after the first one in a given minute.
+  if (viewerSession?.user?.id) {
+    await touchViewerActivity(viewerSession.user.id);
+  }
+
   return (
     <html lang="en" className={`${manrope.variable} ${inter.variable}`}>
       <body className="flex min-h-screen flex-col bg-paper font-body text-ink antialiased">
         <InstallPrompt />
+        {!isAdminRoute && <TrackSiteVisit />}
         {!hidePublicChrome && <Header />}
         {/* Bottom nav is fixed and only visible below md, so its own
             content never needs page padding on desktop — pb-16 clears it
