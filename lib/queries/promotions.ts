@@ -52,6 +52,32 @@ export async function getMyPromotionById(id: string, ownerId: string) {
   return promotion;
 }
 
+// Same ownership scoping as getMyPromotionById, plus the business name —
+// the edit page shows it as read-only context (business/type are fixed on
+// edit, never switchable).
+export async function getMyEditablePromotionById(id: string, ownerId: string) {
+  const promotion = await prisma.promotion.findUnique({
+    where: { id },
+    include: { business: { select: { businessName: true } } },
+  });
+  if (!promotion || promotion.submittedById !== ownerId) return null;
+  if (!isActivePromotion(promotion)) return null;
+  return promotion;
+}
+
+// The public offer detail page a promotion card's click target lands on.
+// Reuses getPublishedPromotionWhere() as the *only* visibility rule (same
+// reasoning as getFeaturedOffers) — an expired/pending/rejected/removed
+// promotion's id simply 404s here, it doesn't leak details.
+export async function getPublicPromotionById(id: string) {
+  return prisma.promotion.findFirst({
+    where: { id, ...getPublishedPromotionWhere() },
+    include: {
+      business: { select: { businessName: true, slug: true, businessPhone: true, city: true, address: true } },
+    },
+  });
+}
+
 export interface CreatePromotionInput {
   businessId: string;
   submittedById: string;
@@ -96,4 +122,22 @@ export async function removeMyPromotion(id: string, ownerId: string): Promise<Re
 
   await prisma.promotion.update({ where: { id }, data: { status: "REMOVED", removedAt: new Date() } });
   return { ok: true };
+}
+
+export interface UpdateMyPromotionInput {
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  startDate: Date;
+  endDate: Date;
+  details: object;
+}
+
+// businessId and type are deliberately never part of this input — an edit
+// changes the promotion's own fields only, same convention as the business
+// listing edit flow (RegisterForm mode="owner-edit"), and publishes
+// immediately with no re-review, whatever the current status (PENDING
+// stays PENDING, APPROVED stays APPROVED and stays live).
+export async function updateMyPromotion(id: string, input: UpdateMyPromotionInput) {
+  return prisma.promotion.update({ where: { id }, data: input });
 }

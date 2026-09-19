@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { Promotion } from "@prisma/client";
 import { AdminToast, type AdminToastValue } from "@/components/admin/AdminToast";
 import { PromotionStatusBadge } from "@/components/promotions/PromotionStatusBadge";
@@ -51,6 +52,7 @@ export function OffersTable({ initialPromotions }: { initialPromotions: Promotio
         {promotions.map((promotion) => {
           const displayStatus = getPromotionDisplayStatus(promotion);
           const canRemove = displayStatus === "APPROVED" && isActivePromotion(promotion);
+          const canEdit = isActivePromotion(promotion);
 
           return (
             <li key={promotion.id} className="rounded-sm border border-sand bg-paper p-4">
@@ -71,16 +73,26 @@ export function OffersTable({ initialPromotions }: { initialPromotions: Promotio
                   )}
                 </div>
 
-                {canRemove && (
-                  <button
-                    type="button"
-                    disabled={busyId === promotion.id}
-                    onClick={() => removePromotion(promotion)}
-                    className="shrink-0 rounded-sm border border-ink px-3 py-1.5 text-xs text-ink transition-colors hover:bg-sand disabled:opacity-40"
-                  >
-                    Remove
-                  </button>
-                )}
+                <div className="flex shrink-0 gap-2">
+                  {canEdit && (
+                    <Link
+                      href={`/my-offers/${promotion.id}/edit`}
+                      className="rounded-sm border border-ink px-3 py-1.5 text-xs text-ink transition-colors hover:bg-sand"
+                    >
+                      Edit
+                    </Link>
+                  )}
+                  {canRemove && (
+                    <button
+                      type="button"
+                      disabled={busyId === promotion.id}
+                      onClick={() => removePromotion(promotion)}
+                      className="rounded-sm border border-ink px-3 py-1.5 text-xs text-ink transition-colors hover:bg-sand disabled:opacity-40"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
               </div>
             </li>
           );

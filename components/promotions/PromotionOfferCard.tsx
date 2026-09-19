@@ -60,12 +60,29 @@ function Highlight({ promotion }: { promotion: PromotionWithBusiness }) {
   ) : null;
 }
 
-function CardBody({ promotion, businessLink }: { promotion: PromotionWithBusiness; businessLink: boolean }) {
+function CardBody({
+  promotion,
+  businessLink,
+  titleHref,
+}: {
+  promotion: PromotionWithBusiness;
+  businessLink: boolean;
+  titleHref?: string;
+}) {
   const details = (promotion.details ?? {}) as Record<string, unknown>;
 
   return (
     <div className="flex flex-1 flex-col gap-1.5 p-4">
-      <span className="font-display text-lg font-bold leading-snug text-ink">{promotion.title}</span>
+      {titleHref ? (
+        <Link
+          href={titleHref}
+          className="font-display text-lg font-bold leading-snug text-ink hover:underline"
+        >
+          {promotion.title}
+        </Link>
+      ) : (
+        <span className="font-display text-lg font-bold leading-snug text-ink">{promotion.title}</span>
+      )}
 
       {businessLink ? (
         // Only reached from the ADVERTISEMENT branch below, which renders a
@@ -107,17 +124,21 @@ export function PromotionOfferCard({ promotion }: { promotion: PromotionWithBusi
   // actionable element instead) — Offer/Campaign cards are, per spec:
   // "clicking anywhere else on the card navigates to the business page."
   if (promotion.type === "ADVERTISEMENT") {
+    // Not a single big Link like the other two types — the CTA button and
+    // business name are their own separate links (an <a> can't nest inside
+    // another <a>), so the card title itself is the click target that goes
+    // to the offer detail page.
     return (
       <div className={cardShell}>
         <div className="h-1 w-full bg-transparent" />
         <ImageArea promotion={promotion} />
-        <CardBody promotion={promotion} businessLink />
+        <CardBody promotion={promotion} businessLink titleHref={`/offers/${promotion.id}`} />
       </div>
     );
   }
 
   return (
-    <Link href={`/business/${promotion.business.slug}`} className={cardShell}>
+    <Link href={`/offers/${promotion.id}`} className={cardShell}>
       <div className="h-1 w-full bg-transparent transition-colors group-hover:bg-signalOrange" />
       <ImageArea promotion={promotion} />
       <CardBody promotion={promotion} businessLink={false} />
