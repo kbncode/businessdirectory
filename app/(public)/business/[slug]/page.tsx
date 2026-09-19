@@ -5,6 +5,7 @@ import { MapPin, Building2, CalendarDays, Store } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { buttonClasses } from "@/components/ui/Button";
 import { BusinessDetailTabs } from "@/components/business/BusinessDetailTabs";
+import { TrackBusinessView } from "@/components/business/TrackBusinessView";
 import { formatBusinessLocation, truncate } from "@/lib/format";
 import { getApprovedBusinessBySlug } from "@/lib/queries/business";
 import { getViewerSession } from "@/lib/auth";
@@ -49,6 +50,8 @@ export default async function BusinessDetailPage({ params }: Props) {
 
   return (
     <div>
+      <TrackBusinessView businessId={business.id} />
+
       {/* ---------- Header ---------- */}
       <section className="bg-paper py-10 md:py-14">
         <div className="mx-auto max-w-5xl px-4">

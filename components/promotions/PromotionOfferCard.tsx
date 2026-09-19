@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
 import { Megaphone } from "lucide-react";
 import { formatMonthDay } from "@/lib/format";
 import { DISCOUNT_TYPES } from "@/lib/promotion-details-schema";
+import { TrackPromotionImpression } from "@/components/promotions/TrackPromotionImpression";
+import { sendTrackingBeacon } from "@/lib/beacon";
 
 type PromotionWithBusiness = Prisma.PromotionGetPayload<{
   include: { business: { select: { businessName: true; slug: true } } };
@@ -76,6 +80,7 @@ function CardBody({
       {titleHref ? (
         <Link
           href={titleHref}
+          onClick={() => sendTrackingBeacon("/api/track/promotion-event", { promotionId: promotion.id, eventType: "CLICK" })}
           className="font-display text-lg font-bold leading-snug text-ink hover:underline"
         >
           {promotion.title}
@@ -130,6 +135,7 @@ export function PromotionOfferCard({ promotion }: { promotion: PromotionWithBusi
     // to the offer detail page.
     return (
       <div className={cardShell}>
+        <TrackPromotionImpression promotionId={promotion.id} />
         <div className="h-1 w-full bg-transparent" />
         <ImageArea promotion={promotion} />
         <CardBody promotion={promotion} businessLink titleHref={`/offers/${promotion.id}`} />
@@ -138,7 +144,12 @@ export function PromotionOfferCard({ promotion }: { promotion: PromotionWithBusi
   }
 
   return (
-    <Link href={`/offers/${promotion.id}`} className={cardShell}>
+    <Link
+      href={`/offers/${promotion.id}`}
+      onClick={() => sendTrackingBeacon("/api/track/promotion-event", { promotionId: promotion.id, eventType: "CLICK" })}
+      className={cardShell}
+    >
+      <TrackPromotionImpression promotionId={promotion.id} />
       <div className="h-1 w-full bg-transparent transition-colors group-hover:bg-signalOrange" />
       <ImageArea promotion={promotion} />
       <CardBody promotion={promotion} businessLink={false} />

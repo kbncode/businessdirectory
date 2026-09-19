@@ -14,15 +14,15 @@ datasource db {
 // ---------- Accounts ----------
 
 model User {
-  id            String     @id @default(cuid())
-  email         String     @unique
+  id            String               @id @default(cuid())
+  email         String               @unique
   passwordHash  String
   name          String?
   image         String?
   emailVerified DateTime?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  businesses    Business[] @relation("SubmittedBy")
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  businesses    Business[]           @relation("SubmittedBy")
   accounts      Account[]
   sessions      Session[]
   resetTokens   PasswordResetToken[]
@@ -117,20 +117,20 @@ model HeroImage {
 // ---------- Master data ----------
 
 model Country {
-  id     String  @id
-  name   String  @unique
-  states State[]
+  id         String     @id
+  name       String     @unique
+  states     State[]
   businesses Business[]
 
   @@map("countries")
 }
 
 model State {
-  id        String   @id
-  name      String
-  countryId String
-  country   Country  @relation(fields: [countryId], references: [id])
-  cities    City[]
+  id         String     @id
+  name       String
+  countryId  String
+  country    Country    @relation(fields: [countryId], references: [id])
+  cities     City[]
   businesses Business[]
 
   @@index([countryId])
@@ -165,20 +165,20 @@ model BusinessType {
 }
 
 model BusinessMainCategory {
-  id          String              @id
-  name        String              @unique
+  id            String                @id
+  name          String                @unique
   subCategories BusinessSubCategory[]
-  businesses  Business[]
+  businesses    Business[]
 
   @@map("business_main_categories")
 }
 
 model BusinessSubCategory {
-  id              String                @id
-  name            String
-  mainCategoryId  String
-  mainCategory    BusinessMainCategory  @relation(fields: [mainCategoryId], references: [id])
-  businesses      BusinessSubCategoryMap[]
+  id             String                   @id
+  name           String
+  mainCategoryId String
+  mainCategory   BusinessMainCategory     @relation(fields: [mainCategoryId], references: [id])
+  businesses     BusinessSubCategoryMap[]
 
   @@index([mainCategoryId])
   @@map("business_sub_categories")
@@ -193,76 +193,77 @@ enum BusinessStatus {
 }
 
 model Business {
-  id                String         @id @default(cuid())
+  id String @id @default(cuid())
 
-  submittedById     String
-  submittedBy       User           @relation("SubmittedBy", fields: [submittedById], references: [id])
+  submittedById String
+  submittedBy   User   @relation("SubmittedBy", fields: [submittedById], references: [id])
 
   // Generated once from businessName at creation time (see lib/slug.ts) and
   // never auto-regenerated on edit — a listing's public URL has to stay
   // stable even after the owner renames the business, or every shared
   // link/bookmark/search-engine result for it breaks.
-  slug              String         @unique
-  ownerName         String
-  businessName      String
-  establishedYear   Int?
-  businessPhone     String
-  personalPhone     String?
-  email             String?
-  website           String?
+  slug            String  @unique
+  ownerName       String
+  businessName    String
+  establishedYear Int?
+  businessPhone   String
+  personalPhone   String?
+  email           String?
+  website         String?
 
-  entityId          String
-  entity            BusinessEntity @relation(fields: [entityId], references: [id])
+  entityId String
+  entity   BusinessEntity @relation(fields: [entityId], references: [id])
 
-  typeId            String
-  type              BusinessType   @relation(fields: [typeId], references: [id])
+  typeId String
+  type   BusinessType @relation(fields: [typeId], references: [id])
 
-  mainCategoryId    String
-  mainCategory      BusinessMainCategory @relation(fields: [mainCategoryId], references: [id])
-  subCategories     BusinessSubCategoryMap[]
+  mainCategoryId String
+  mainCategory   BusinessMainCategory     @relation(fields: [mainCategoryId], references: [id])
+  subCategories  BusinessSubCategoryMap[]
 
-  countryId         String
-  country           Country        @relation(fields: [countryId], references: [id])
-  stateId           String?
-  state             State?         @relation(fields: [stateId], references: [id])
-  city              String
-  area              String?
-  nativePlace       String?
-  address           String?
+  countryId   String
+  country     Country @relation(fields: [countryId], references: [id])
+  stateId     String?
+  state       State?  @relation(fields: [stateId], references: [id])
+  city        String
+  area        String?
+  nativePlace String?
+  address     String?
 
-  about             String?
-  productsServices  String?
-  experience        String?
-  socialLinks       String?
+  about            String?
+  productsServices String?
+  experience       String?
+  socialLinks      String?
 
-  photoUrl          String?
-  brochureUrl       String?
-  additionalNote    String?
+  photoUrl       String?
+  brochureUrl    String?
+  additionalNote String?
 
-  status            BusinessStatus @default(PENDING)
-  rejectionReason   String?
+  status          BusinessStatus @default(PENDING)
+  rejectionReason String?
 
   // Home page "Featured listings" — admin-controlled, auto-expires. A row
   // only actually shows once status: APPROVED AND isFeatured AND the
   // current time falls within [featuredStartDate, featuredEndDate] (either
   // bound may be null/open-ended) — see getFeaturedBusinesses. No cron job
   // needed to "remove" an expired feature; the query filter handles it.
-  isFeatured        Boolean        @default(false)
+  isFeatured        Boolean   @default(false)
   featuredStartDate DateTime?
   featuredEndDate   DateTime?
 
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  approvedAt        DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  approvedAt DateTime?
 
   // Generated tsvector column (businessName/about/productsServices), kept in
   // sync by Postgres itself — see the add_search_and_indexes migration for
   // the GENERATED ALWAYS AS ... STORED definition and its GIN index. Prisma
   // can't express a generated column, so it's read-only from the client and
   // only ever queried via $queryRaw in lib/queries/business.ts.
-  searchVector      Unsupported("tsvector")?
+  searchVector Unsupported("tsvector")?
 
-  promotions        Promotion[]
+  promotions Promotion[]
+  views      BusinessView[]
 
   @@index([countryId, stateId, city, status])
   @@index([mainCategoryId, status])
@@ -274,9 +275,9 @@ model Business {
 
 model BusinessSubCategoryMap {
   businessId    String
-  business      Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  business      Business            @relation(fields: [businessId], references: [id], onDelete: Cascade)
   subCategoryId String
-  subCategory   BusinessSubCategory  @relation(fields: [subCategoryId], references: [id])
+  subCategory   BusinessSubCategory @relation(fields: [subCategoryId], references: [id])
 
   @@id([businessId, subCategoryId])
   @@index([subCategoryId])
@@ -342,13 +343,13 @@ model HeaderMenuItem {
 }
 
 model FooterLink {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   section   String // e.g. "Company", "Social", "Quick Links"
   label     String
   url       String
   icon      String? // lucide icon name, mainly for social links
-  sortOrder Int      @default(0)
-  isActive  Boolean  @default(true)
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
 
   @@index([section, sortOrder])
   @@map("footer_links")
@@ -456,7 +457,43 @@ model Promotion {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  events PromotionEvent[]
+
   @@index([status, endDate])
   @@index([businessId, status])
   @@map("promotions")
+}
+
+// ---------- View / event tracking ----------
+
+enum PromotionEventType {
+  IMPRESSION
+  CLICK
+}
+
+model BusinessView {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  visitorKey String
+  viewDate   DateTime // truncated to date (midnight UTC)
+  createdAt  DateTime @default(now())
+
+  @@unique([businessId, visitorKey, viewDate])
+  @@index([businessId, viewDate])
+  @@map("business_views")
+}
+
+model PromotionEvent {
+  id          String             @id @default(cuid())
+  promotionId String
+  promotion   Promotion          @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  eventType   PromotionEventType
+  visitorKey  String
+  eventDate   DateTime // truncated to date
+  createdAt   DateTime           @default(now())
+
+  @@unique([promotionId, eventType, visitorKey, eventDate])
+  @@index([promotionId, eventType, eventDate])
+  @@map("promotion_events")
 }
