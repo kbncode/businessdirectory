@@ -155,9 +155,24 @@ model City {
   stateId String
   state   State  @relation(fields: [stateId], references: [id])
 
+  homeFeature HomeCityFeature?
+
   @@index([stateId])
   @@index([name])
   @@map("cities")
+}
+
+model HomeCityFeature {
+  id        String   @id @default(cuid())
+  cityId    String   @unique
+  city      City     @relation(fields: [cityId], references: [id])
+  iconUrl   String?
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([isActive, sortOrder])
+  @@map("home_city_features")
 }
 
 model BusinessEntity {

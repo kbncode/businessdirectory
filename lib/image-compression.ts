@@ -32,3 +32,17 @@ export async function compressImage(input: Buffer, options: CompressImageOptions
     sizeBytes: buffer.byteLength,
   };
 }
+
+// Forces an exact square output (center-cropped via fit: "cover") — used
+// for small fixed-size icons (e.g. the home page city icons) where there's
+// no crop-modal step for the admin to frame the shot themselves, unlike
+// compressImage above which only constrains width and keeps the source's
+// own aspect ratio.
+export async function compressToSquare(input: Buffer, size: number, quality = 80): Promise<CompressedImage> {
+  const buffer = await sharp(input)
+    .resize({ width: size, height: size, fit: "cover" })
+    .webp({ quality })
+    .toBuffer();
+
+  return { buffer, width: size, height: size, sizeBytes: buffer.byteLength };
+}

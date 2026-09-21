@@ -17,6 +17,7 @@ import {
   Menu as MenuIcon,
   PanelBottom,
   Settings,
+  MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +34,7 @@ const NAV_ITEMS = [
 
 const CONTENT_NAV_ITEMS = [
   { href: "/admin/hero-images", label: "Hero Images", icon: ImageIcon },
+  { href: "/admin/home-cities", label: "Browse by City", icon: MapPin },
   { href: "/admin/gallery", label: "Gallery", icon: Images },
   { href: "/admin/pages", label: "Pages", icon: FileText },
   { href: "/admin/header-menu", label: "Header Menu", icon: MenuIcon },
