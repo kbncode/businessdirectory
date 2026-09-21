@@ -84,8 +84,10 @@ export function RegisterForm({
   const [originalPhotoSrc, setOriginalPhotoSrc] = useState<string | null>(null);
   const [originalPhotoName, setOriginalPhotoName] = useState<string>("photo");
   const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [photoRemoved, setPhotoRemoved] = useState(false);
   const [brochureFile, setBrochureFile] = useState<File | null>(null);
   const [brochureError, setBrochureError] = useState<string | null>(null);
+  const [brochureRemoved, setBrochureRemoved] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -151,6 +153,7 @@ export function RegisterForm({
     setPhotoError(null);
     setPhotoPreview(null);
     setPhotoFile(null);
+    setPhotoRemoved(false);
 
     if (!file) return;
 
@@ -182,10 +185,32 @@ export function RegisterForm({
     }
   }
 
+  function handleRemovePhoto() {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    setPhotoRemoved(true);
+    if (photoInputRef.current) photoInputRef.current.value = "";
+  }
+
+  function handleUndoRemovePhoto() {
+    setPhotoRemoved(false);
+  }
+
+  function handleRemoveBrochure() {
+    setBrochureFile(null);
+    setBrochureRemoved(true);
+    if (brochureInputRef.current) brochureInputRef.current.value = "";
+  }
+
+  function handleUndoRemoveBrochure() {
+    setBrochureRemoved(false);
+  }
+
   function handleBrochureChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;
     setBrochureError(null);
     setBrochureFile(null);
+    setBrochureRemoved(false);
 
     if (!file) return;
 
@@ -222,6 +247,8 @@ export function RegisterForm({
     }
     if (photoFile) formData.set("photo", photoFile);
     if (brochureFile) formData.set("brochure", brochureFile);
+    if (photoRemoved) formData.set("removePhoto", "true");
+    if (brochureRemoved) formData.set("removeBrochure", "true");
 
     // The honeypot field isn't part of the `values` state above (it's never
     // meant to be a real field), so it has to be read straight off the DOM —
@@ -598,13 +625,30 @@ export function RegisterForm({
             </div>
           ) : (
             isEdit &&
-            initialPhotoUrl && (
+            initialPhotoUrl &&
+            (photoRemoved ? (
+              <div className="mt-3 flex items-center gap-3">
+                <span className="text-xs text-stone">Photo will be removed when you save.</span>
+                <button type="button" onClick={handleUndoRemovePhoto} className="text-xs font-medium text-ink underline">
+                  Undo
+                </button>
+              </div>
+            ) : (
               <div className="mt-3 flex items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element -- Blob/local-hosted current photo */}
                 <img src={initialPhotoUrl} alt="Current photo" className="h-20 w-32 rounded-sm object-cover" />
-                <span className="text-xs text-stone">Current photo</span>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs text-stone">Current photo</span>
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    className="self-start text-xs font-medium text-rejectedRed underline"
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
-            )
+            ))
           )}
         </FormField>
 
@@ -632,11 +676,28 @@ export function RegisterForm({
             </p>
           ) : (
             isEdit &&
-            initialBrochureUrl && (
-              <a href={initialBrochureUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs text-ink underline">
-                Current brochure
-              </a>
-            )
+            initialBrochureUrl &&
+            (brochureRemoved ? (
+              <div className="mt-2 flex items-center gap-3">
+                <span className="text-xs text-stone">Document will be removed when you save.</span>
+                <button type="button" onClick={handleUndoRemoveBrochure} className="text-xs font-medium text-ink underline">
+                  Undo
+                </button>
+              </div>
+            ) : (
+              <div className="mt-2 flex items-center gap-3">
+                <a href={initialBrochureUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-ink underline">
+                  Current brochure
+                </a>
+                <button
+                  type="button"
+                  onClick={handleRemoveBrochure}
+                  className="text-xs font-medium text-rejectedRed underline"
+                >
+                  Remove
+                </button>
+              </div>
+            ))
           )}
         </FormField>
       </section>

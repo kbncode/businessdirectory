@@ -68,6 +68,13 @@ export async function applyBusinessEdit(
 
   const photoFile = formData.get("photo");
   const brochureFile = formData.get("brochure");
+  // A freshly-selected file always wins over a "remove" flag — the client
+  // clears its own removed-state as soon as a new file is chosen (see
+  // RegisterForm's handlePhotoChange/handleBrochureChange), so these flags
+  // only ever reach here when the user actually wants a bare removal with
+  // no replacement.
+  const removePhoto = field(formData, "removePhoto") === "true";
+  const removeBrochure = field(formData, "removeBrochure") === "true";
 
   try {
     if (photoFile instanceof File && photoFile.size > 0) {
@@ -88,6 +95,9 @@ export async function applyBusinessEdit(
       );
       if (existing.photoUrl) await deleteAsset(existing.photoUrl).catch(() => {});
       photoUrl = uploaded.url;
+    } else if (removePhoto && existing.photoUrl) {
+      await deleteAsset(existing.photoUrl).catch(() => {});
+      photoUrl = null;
     }
 
     if (brochureFile instanceof File && brochureFile.size > 0) {
@@ -112,6 +122,9 @@ export async function applyBusinessEdit(
       );
       if (existing.brochureUrl) await deleteAsset(existing.brochureUrl).catch(() => {});
       brochureUrl = uploaded.url;
+    } else if (removeBrochure && existing.brochureUrl) {
+      await deleteAsset(existing.brochureUrl).catch(() => {});
+      brochureUrl = null;
     }
   } catch (error) {
     console.error(`Failed to process uploads for business ${existing.id}:`, error);
