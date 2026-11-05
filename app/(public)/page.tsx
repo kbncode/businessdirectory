@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { BusinessCard } from "@/components/ui/BusinessCard";
 import { CategoryTile } from "@/components/ui/CategoryTile";
+import { CityTile } from "@/components/ui/CityTile";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { EventCard } from "@/components/events/EventCard";
 import { PromotionOfferCard } from "@/components/promotions/PromotionOfferCard";
@@ -9,18 +10,21 @@ import { getMainCategories, getFeaturedBusinesses } from "@/lib/queries/business
 import { getActiveHeroImages } from "@/lib/queries/hero-images";
 import { getFeaturedUpcomingEvents } from "@/lib/queries/events";
 import { getFeaturedOffers } from "@/lib/queries/promotions";
+import { getFeaturedCities } from "@/lib/queries/home-cities";
 import { formatBusinessLocation } from "@/lib/format";
 
 const CATEGORY_PREVIEW_COUNT = 12;
 
 export default async function HomePage() {
-  const [mainCategories, featuredBusinesses, heroImages, featuredEvents, featuredOffers] = await Promise.all([
-    getMainCategories(),
-    getFeaturedBusinesses(),
-    getActiveHeroImages(),
-    getFeaturedUpcomingEvents(3),
-    getFeaturedOffers(8),
-  ]);
+  const [mainCategories, featuredBusinesses, heroImages, featuredEvents, featuredOffers, featuredCities] =
+    await Promise.all([
+      getMainCategories(),
+      getFeaturedBusinesses(),
+      getActiveHeroImages(),
+      getFeaturedUpcomingEvents(3),
+      getFeaturedOffers(8),
+      getFeaturedCities(),
+    ]);
 
   const previewCategories = mainCategories.slice(0, CATEGORY_PREVIEW_COUNT);
 
@@ -127,6 +131,27 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ---------- Browse by city ---------- */}
+      {featuredCities.length > 0 && (
+        <section className="bg-paper py-16 md:py-20">
+          <div className="mx-auto max-w-6xl px-4">
+            <p className="font-body text-xs font-semibold uppercase tracking-widest text-stone">Browse by city</p>
+            <h2 className="mt-1 font-display text-2xl font-bold text-ink">Find businesses near you</h2>
+
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              {featuredCities.map((city) => (
+                <CityTile
+                  key={city.id}
+                  label={city.name}
+                  iconUrl={city.iconUrl}
+                  href={`/browse?country=${city.countryId}&state=${city.stateId}&city=${encodeURIComponent(city.name)}`}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ---------- Featured offers ---------- */}
       {featuredOffers.length > 0 && (
