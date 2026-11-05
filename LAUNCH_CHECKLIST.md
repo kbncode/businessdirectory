@@ -16,8 +16,8 @@ Vercel → Project → Settings → Environment Variables. Every var below needs
 - [ ] `NEXTAUTH_SECRET` — generate a **fresh** value for production (`openssl rand -base64 32`).
       Do not reuse the value from local dev.
 - [ ] `NEXTAUTH_URL` — set to the real production URL (e.g. `https://kbndirectory.com`)
-- [ ] `RESEND_API_KEY` — real key from resend.com/api-keys
-- [ ] `EMAIL_FROM` — see section 3 below (still the sandbox sender as of this checklist)
+- [x] `RESEND_API_KEY` — real key from resend.com/api-keys
+- [x] `EMAIL_FROM` — see section 3 below
 - [ ] `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` — real Upstash Redis credentials.
       **Currently unset** — rate limiting falls back to an in-memory limiter that is
       per-instance and does not survive restarts or work across multiple serverless
@@ -37,15 +37,15 @@ Vercel → Project → Settings → Environment Variables. Every var below needs
 
 ## 3. Resend domain verification
 
-- [ ] Verify a custom sending domain in the Resend dashboard (Domains → Add Domain), add the
+- [x] Verify a custom sending domain in the Resend dashboard (Domains → Add Domain), add the
       DNS records it gives you
-- [ ] Once verified, update `EMAIL_FROM` to use that domain (e.g.
+- [x] Once verified, update `EMAIL_FROM` to use that domain (e.g.
       `"KBN Business Directory <notifications@yourdomain.com>"`) instead of the sandbox
       `onboarding@resend.dev` sender
-- [ ] Sandbox sender can only deliver to the email address verified on the Resend account —
+- [x] Sandbox sender can only deliver to the email address verified on the Resend account —
       confirm this has been swapped before relying on `RegistrationReceived`,
       `ListingApproved`, `ListingRejected`, or `AdminNewSubmission` reaching real users
-- [ ] Remove or update the sandbox-limitation note currently shown on `/admin/admin-users`
+- [x] Remove or update the sandbox-limitation note currently shown on `/admin/admin-users`
       once the custom domain is live
 
 ## 4. Admin account credentials
